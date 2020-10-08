@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Category Learning Task</title>
+    <script src="jspsych-6.1.0/jspsych.js"></script>
+    <script src="jspsych-6.1.0/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="jspsych-6.1.0/plugins/jspsych-image-keyboard-response.js"></script>
+    <script src="jspsych-6.1.0/plugins/image-bkg-keyboard-response.js"></script>
+    <link href="jspsych-6.1.0/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+</head>
+</head>
+<body>
+    <p>Hi</p>
+</body>
+<script>
+
+    var timeline = [];
+
+    // welcome
+    var start_trial = {
+        type: 'html-keyboard-response',
+        stimulus: 'Welcome! Press any key to begin.'
+    }
+    timeline.push(start_trial);
+
+    // instructions for categorization learning task
+    var instructions = '<p>You will see images of flowers on the screen.</p>\
+                        <p>Determine whether each flower is <i>sun-preferring</i> or <i>shade-preferring</i>.</p>'+
+                        "<div>"+
+                        '<div style="float: left;""><img src="assets/img/sun.png" width="200" height="200"></img>' +
+                        "<p class ='small'><i>sun-preferring</i></p>"+
+                        "<p class='small'><strong>Press the 1 key</strong></p></div>" +
+                        "<div class='float: right;'><img src='assets/img/cloud.png' width='280' height='200'></img>" +
+                        "<p class ='small'><i>shade-preferring</i></p>"+
+                        "<p class='small'><strong>Press the 0 key</strong></p></div>" +
+                        "</div>"+
+                        "Please make your responses as fast and accurately as possible.<br>"
+                        "<p>Press any key to begin.</p>";
+    var instruction_trial = {
+        type: 'html-keyboard-response',
+        stimulus: instructions
+    }
+    timeline.push(instruction_trial);
+
+    // categorization learning task
+    var fixation_time = 1000;
+    var stim_time = 3500;
+    var bkg_time = 500;
+    var feedback_time = 1000;
+    var stim_question = "Is this <i>sun-preferring</i> or <i>shade-preferring</i>?";
+
+    // stimuli: flower and background
+    var stimuli = [
+        {stimulus: 'assets/img/flower1.png', background: 'assets/img/bkg_1.jpeg', group: 'sun'},
+        {stimulus: 'assets/img/flower2.png', background: 'assets/img/bkg_2.jpeg', group: 'sun'},
+        {stimulus: 'assets/img/flower3.png', background: 'assets/img/bkg_3.jpeg', group: 'shade'},
+        {stimulus: 'assets/img/flower4.png', background: 'assets/img/bkg_4.jpeg', group: 'shade'},
+    ]
+
+
+    // 1) fixation cross
+    var fixation = {  
+        type: 'html-keyboard-response',
+        stimulus: '+',
+        choices: jsPsych.NO_KEYS,
+        trial_duration: fixation_time
+    }
+
+    // 2) stimulus + background
+    var stim = {  
+        type: 'image-bkg-keyboard-response',
+        stimulus: jsPsych.timelineVariable('stimulus'),
+        stimulus_height: 100,
+        background: jsPsych.timelineVariable('background'),
+        choices: ['0', '1'],
+        prompt: '<p>'+stim_question+'</p><br><div style="float: left;">1 - sun</div><div style="float: right;">0 - shade</div>',
+        response_ends_trial: false,
+        trial_duration: stim_time,
+        data: {
+            stimulus_type: jsPsych.timelineVariable('group')
+        },
+        on_finish: function(data){
+            if( ( (data.key_press == 48) && (data.stimulus_type == 'shade') ) // 48 numeric code for '0'
+                || ( (data.key_press == 49) && (data.stimulus_type == 'sun') ) ){
+                data.correct = true;
+            } else {
+                data.correct = false;
+            }
+        }
+    }
+
+    // 3) background
+    var background = {  
+        type: 'image-keyboard-response',
+        stimulus: jsPsych.timelineVariable('background'),
+        choices: jsPsych.NO_KEYS,
+        prompt: '<p>'+stim_question+'</p><br><div style="float: left;">1 - sun</div><div style="float: right;">0 - shade</div>',
+        trial_duration: bkg_time
+    }
+
+    // 4) feedback
+    var feedback = {
+        type: 'html-keyboard-response',
+        stimulus: function() {
+            var last_trial_correct = jsPsych.data.get().last(2).values()[0].correct;
+            var html = "";
+
+            if(last_trial_correct){
+                html += "<p style='color:green; font-size:50px;'>Correct!</p>\
+                        <p style='color:green; font-size:50px;'>&#9786;</p>";
+            } else {
+                html += "<p style='color:red; font-size:50px;'>Wrong.</p>\
+                        <p style='color:red; font-size:50px;'>&#9785;</p>";
+            }
+            
+            html += "<p style='font-size:50px'>This flower likes</p>\
+                    <p style='font-size:100px;'>"+jsPsych.data.get().last(2).values()[0].stimulus_type+"</p>";
+            
+            if(jsPsych.data.get().last(2).values()[0].stimulus_type == 'shade') {
+                html += "<img src='assets/img/cloud.png' width='280' height='200'>";
+            } else {
+                html += "<img src='assets/img/sun.png' width='280' height='200'>";
+            }
+            
+            return html;
+        },
+        choices: jsPsych.NO_KEYS,
+        trial_duration: feedback_time
+    }
+
+    // entire categorization trial set
+    var categorization_trials = {
+        timeline : [fixation, stim, background,feedback],
+        timeline_variables: stimuli
+    }
+    timeline.push(categorization_trials)
+
+
+    // 5 min sudoku
+
+    // 1) instructions
+
+    // 2) sudoku
+
+
+    // recognition task PART I (scenes)
+
+    // recognition task PART II (build/association)
+
+
+    // thank you
+    var end_trial = {
+        type: 'html-keyboard-response',
+        stimulus: 'Thanks! :)'
+    }
+    timeline.push(end_trial);
+
+    // run experiment
+    jsPsych.init({
+        timeline: timeline,
+        on_finish: function(){jsPsych.data.displayData(); }
+    })
+
+</script>
+</html>
