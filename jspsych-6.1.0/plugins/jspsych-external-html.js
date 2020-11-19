@@ -81,6 +81,13 @@ jsPsych.plugins['external-html'] = (function() {
         for (const scriptElement of display_element.getElementsByTagName("script")) {
         const relocatedScript = document.createElement("script");
         relocatedScript.text = scriptElement.text;
+        relocatedScript.type = scriptElement.type;
+        if (scriptElement.hasAttribute("src")){
+            relocatedScript.src = scriptElement.src;
+        } 
+        if (scriptElement.hasAttribute("canvas")) {
+            relocatedScript.setAttribute("canvas", "myCanvas");
+        }    
         scriptElement.parentNode.replaceChild(relocatedScript, scriptElement);
         };
       }

@@ -255,8 +255,8 @@
         timeline_variables: stimuli
     }
     timeline.push(start_trial);
-    //timeline.push(instruction_trial);
-    //timeline.push(categorization_trials);
+    timeline.push(instruction_trial);
+    timeline.push(categorization_trials);
 
 
     // 5 min sudoku
@@ -301,13 +301,13 @@
 
     }
     timeline.push(rec_instruction_trial);
-    //timeline.push(recognition_trials)
+    timeline.push(recognition_trials)
 
 
     // recognition task PART II (build/association)
      var recon_trial = {
         type: 'external-html',
-        url: 'https://mwoodb.github.io/index.html',
+        url: 'flower_generator_index.html',
         cont_key: ['0'],
         execute_script: true
      }
