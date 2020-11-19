@@ -97,8 +97,8 @@ jsPsych.plugins["image-bkg-keyboard-response"] = (function() {
     plugin.trial = function(display_element, trial) {
   
       // display stimulus
-      var html = '<div style="position: relative; left: 0; top: 0;">\
-                  <img src="'+trial.stimulus+'" id="jspsych-image-keyboard-response-stimulus" style="position: absolute; z-index: 1; ';
+      var html = '<div style="position: relative; left: 0; top: 0; display: grid; height: 100%;">\
+                  <img src="'+trial.stimulus+'" id="image-bkg-keyboard-response-stimulus" style="position: absolute; z-index: 1; ';
       if(trial.stimulus_height !== null){
         html += 'height:'+trial.stimulus_height+'px; '
         if(trial.stimulus_width == null && trial.maintain_aspect_ratio){
@@ -124,15 +124,15 @@ jsPsych.plugins["image-bkg-keyboard-response"] = (function() {
       html +='"></img>';
   
       // add background
-      html += '<img src="'+trial.background+'" id="jspsych-image-keyboard-response-background" style="position: relative; z-index: 0; '
+      html += '<img src="'+trial.background+'" id="image-bkg-keyboard-response-background" style="position: relative; z-index: 0; '
       if(trial.background_height !== null){
-        html += 'height:'+trial.background_height+'px; '
+        html += 'max-height:'+trial.background_height+'%; '
         if(trial.background_width == null && trial.maintain_aspect_ratio){
           html += 'width: auto; ';
         }
       }
       if(trial.background_width !== null){
-        html += 'width:'+trial.background_width+'px; '
+        html += 'max-width:'+trial.background_width+'%; '
         if(trial.background_height == null && trial.maintain_aspect_ratio){
           html += 'height: auto; ';
         }
@@ -184,7 +184,7 @@ jsPsych.plugins["image-bkg-keyboard-response"] = (function() {
   
         // after a valid response, the stimulus will have the CSS class 'responded'
         // which can be used to provide visual feedback that a response was recorded
-        display_element.querySelector('#jspsych-image-keyboard-response-stimulus').className += ' responded';
+        display_element.querySelector('#image-bkg-keyboard-response-stimulus').className += ' responded';
   
         // only record the first response
         if (response.key == null) {
@@ -210,7 +210,7 @@ jsPsych.plugins["image-bkg-keyboard-response"] = (function() {
       // hide stimulus if stimulus_duration is set
       if (trial.stimulus_duration !== null) {
         jsPsych.pluginAPI.setTimeout(function() {
-          display_element.querySelector('#jspsych-image-keyboard-response-stimulus').style.visibility = 'hidden';
+          display_element.querySelector('#image-bkg-keyboard-response-stimulus').style.visibility = 'hidden';
         }, trial.stimulus_duration);
       }
   
