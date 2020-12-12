@@ -1,5 +1,5 @@
 /**
- * image-bkg-keyboard-response
+ * html-bkg-keyboard-response
  * Merron Woodbury
  *
  * plugin for displaying a stimulus with a background image and getting a keyboard response
@@ -8,22 +8,16 @@
  **/
 
 
-jsPsych.plugins["image-bkg-keyboard-response"] = (function() {
+jsPsych.plugins["html-bkg-keyboard-response"] = (function() {
 
     var plugin = {};
   
-    jsPsych.pluginAPI.registerPreload('image-bkg-keyboard-response', 'stimulus', 'image');
+    jsPsych.pluginAPI.registerPreload('html-bkg-keyboard-response', 'background', 'image');
   
     plugin.info = {
-      name: 'image-bkg-keyboard-response',
+      name: 'html-bkg-keyboard-response',
       description: '',
       parameters: {
-        stimulus: {
-          type: jsPsych.plugins.parameterType.IMAGE,
-          pretty_name: 'Stimulus',
-          default: undefined,
-          description: 'The image to be displayed'
-        },
         background: {
           type: jsPsych.plugins.parameterType.IMAGE,
           pretty_name: 'Background',
@@ -97,60 +91,26 @@ jsPsych.plugins["image-bkg-keyboard-response"] = (function() {
     plugin.trial = function(display_element, trial) {
   
       
-      var html = '<div id="jspych-image-bkg-keyboard-response-container">'
+      var html =  '<script type="text/javascript" src="js/paper-full.min.js"></script>\
+                  <script type="text/javascript" src="js/rgb2lab.js"></script>\
+                  <script type="text/paperscript" src="js/flower_generator.js" canvas="myCanvas"></script>'+
+                  '<div style="position: relative; top: 0; left: 0; width: 50%; height: 50%; margin: auto;">\
+                    <canvas id="myCanvas" class="stimulus" style="background: lightgray; position: absolute; left: 35%; top: 32%; z-index: 2;" width="100%" height="100%" resize="true" data-paper-scope="1"></canvas>\
+                    <img src="'+trial.background+'" style="top: 0; left: 0; max-width: 100%; max-height: 100vh; position: relative; z-index: 0"></img>\
+                </div>'+
+                '<script type="text/javascript">\
+                    window.globals = {x1:'+50+', x2:'+1+', x3:'+13+'};\
+                    window.onload = function(){\
+                        window.globals.drawFlower1(globals.x1,globals.x2,globals.x3);\
+                    }\
+                </script>';
   
-      // add background
-      html += '<img src="'+trial.background+'" id="jspsych-image-bkg-keyboard-response-background" style="'
-      if(trial.background_height !== null){
-        html += 'height:'+trial.background_height+'%; '
-        if(trial.background_width == null && trial.maintain_aspect_ratio){
-          html += 'width: auto; ';
-        }
-      }
-      if(trial.background_width !== null){
-        html += 'width:'+trial.background_width+'%; '
-        if(trial.background_height == null && trial.maintain_aspect_ratio){
-          html += 'height: auto; ';
-        }
-      } 
-
-      html += '"></img>';
-
-      html += '<p style="background-color:lightgray; position: absolute; top: 30%; left: 37.5%; max-width: 30%; max-height: 30%; margin: auto;"></p>';
-
-      // display stimulus
-      html += '<img src="'+trial.stimulus+'" id="jspych-image-bkg-keyboard-response-stimulus" style="';
-      if(trial.stimulus_height !== null){
-            html += 'height:'+trial.stimulus_height+'px; '
-            if(trial.stimulus_width == null && trial.maintain_aspect_ratio){
-            html += 'width: auto; ';
-            }
-      }
-      if(trial.stimulus_width !== null){
-            html += 'width:'+trial.stimulus_width+'px; '
-            if(trial.stimulus_height == null && trial.maintain_aspect_ratio){
-            html += 'height: auto; ';
-            }
-      }
-      if (trial.stimulus_height !== null) {
-            html +='top:'+trial.stimulus_height*1.5+'px; ';
-            if(trial.stimulus_width !== null){
-            html += 'right:'+trial.stimulus_width*1.5+'px; ';
-            }
-            else {
-            html += 'right:'+trial.stimulus_height*2.5+'px; ';
-            }
-       }
-        
-        html +='"></img>';
-
-      html += "</div>";
 
       // add prompt
       if (trial.prompt !== null){
         html += trial.prompt;
       }
-  
+
       // render
       display_element.innerHTML = html;
   
@@ -216,7 +176,7 @@ jsPsych.plugins["image-bkg-keyboard-response"] = (function() {
       // hide stimulus if stimulus_duration is set
       if (trial.stimulus_duration !== null) {
         jsPsych.pluginAPI.setTimeout(function() {
-          display_element.querySelector('#jspych-image-bkg-keyboard-response-stimulus').style.visibility = 'hidden';
+          display_element.querySelector('#jspych-html-bkg-keyboard-response-stimulus').style.visibility = 'hidden';
         }, trial.stimulus_duration);
       }
   

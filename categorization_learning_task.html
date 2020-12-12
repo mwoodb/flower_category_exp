@@ -5,326 +5,113 @@
     <title>Category Learning Task</title>
     <script src="jspsych-6.1.0/jspsych.js"></script>
     <script src="jspsych-6.1.0/plugins/jspsych-html-keyboard-response.js"></script>
-    <script src="jspsych-6.1.0/plugins/jspsych-image-keyboard-response.js"></script>
-    <script src="jspsych-6.1.0/plugins/jspsych-image-bkg-keyboard-response.js"></script>
+    <script src="jspsych-6.1.0/plugins/jspsych-html-button-response.js"></script>
+    <script src="jspsych-6.1.0/plugins/jspsych-image-button-response.js"></script>
+    <script src="jspsych-6.1.0/plugins/jspsych-image-bkg-button-response.js"></script>
     <script src="jspsych-6.1.0/plugins/jspsych-external-html.js"></script>
-    <script src="jspsych-6.1.0/plugins/jspsych-categorize-html.js"></script>
+    <script src="jspsych-6.1.0/plugins/jspsych-external-html-flower-recon.js"></script>
+    <script src="jspsych-6.1.0/plugins/jspsych-instructions.js"></script>
+    <script src="js/underscore-min.js"></script> 
+    <script src="js/jquery.csv.js"></script>
 
     <link href="jspsych-6.1.0/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+        }
+        
+        /* Scale canvas with resize attribute to full size */
+        canvas[resize] {
+            width: 30%;
+        }
+    </style>
+
 </head>
-<div>
-    <canvas id="myCanvas"></canvas>
-</div>
+
 <script>
+    window.globals = {x1: 180, x2: 10, x3: 9};
     var timeline = [];
 
-    // instructions for categorization learning task
-    var cat_instructions = '<p>You will see images of flowers on the screen.</p>\
-                        <p>Determine whether each flower is <i>sun-preferring</i> or <i>shade-preferring</i>.</p>'+
-                        "<div>"+
-                        '<div style="float: left;""><img src="assets/img/sun.png" width="200" height="200"></img>' +
-                        "<p class ='small'><i>sun-preferring</i></p>"+
-                        "<p class='small'><strong>Press the 1 key</strong></p></div>" +
-                        "<div class='float: right;'><img src='assets/img/cloud.png' width='280' height='200'></img>" +
-                        "<p class ='small'><i>shade-preferring</i></p>"+
-                        "<p class='small'><strong>Press the 0 key</strong></p></div>" +
-                        "</div>"+
-                        "Please make your responses as fast and accurately as possible.<br>"
-                        "<p>Press any key to begin.</p>";
-   
-    // instructions for recognition task part I
-    var rec_instructions = '<p>You will see images of scenes on the screen.</p><br>\
-                        <p>Determine whether you have seen the scene during the categorization task.</p>'+
-                        "<p>Please make your responses as fast and accurately as possible.</p><br>" +
-                        "<p>Press any key to begin.</p>";
+    /****************** set up *************************/
 
-    // categorization learning task
+    // instructions
+    var overview = 'Welcome! <br> This study involves one learning phase and two test phases.<br><br>';
+    var learning_ins = 'For the learning phase, you will see images of flowers on the screen.<br><br>'+
+                    'You will determine whether each flower belongs to the category <i>sun-preferring</i> or <i>shade-preferring</i> .<br>\
+                          Press "Sun" if you think the flower is sun-preferring and "Shade" if you think it is shade-preferring.<br>\
+                          Please make your responses as fast and accurately as possible.<br><br>'+
+                    'You will receive feedback after responding to an image.<br>';
+    var start_ins = "<br>Once you've finished reading the instructions, please press 'Next' to start the trials.<br><br>";
+    var cat_instructions = '<p style="color:black; font-size: 20px;">'+
+                        '<b>Category learning session</b></br></br>'+
+                        '<p>In this session, you will see an image of a flower at the center of the screen.</p>\
+                        <p>Determine whether the flower is <i>sun-preferring</i> or <i>shade-preferring</i>.</p>'+
+                        "<div>"+
+                            '<div style="float: left;">\
+                                <img src="assets/img/sun.png" width="200"></img>' +
+                                "<p class ='small'>Press <i>sun</i></p>"+
+                            "</div>" +
+                            "<div class='float: right;'>\
+                                <img src='assets/img/cloud.png' width='200'></img>" +
+                                "<p class ='small'>Press <i>shade</i></p>"+
+                            "</div>" +
+                        "</div></br>"+
+                        "<p>Please make your responses as fast and accurately as possible.</p>"+
+                        "<p>Press any key to begin.</p></p>";
+   
+    var rec_instructions = '<p style="color:black; font-size: 20px;">'+
+                        '<b>Scene recognition session</b></br></br>'+
+                        '<p>In this session, you will see an image of a scene at the center of the screen.</p>\
+                        <p>Press <button style="width:8%;">Old</button> if you remember the scene from the <br> flower categorization task, press <button style="width:8%;">New</button> if you do not.</p>'+
+                        "<br><p>Please make your responses as fast and accurately as possible.</p>" +
+                        "<p>Press any key to begin.</p></p>";
+
+    var recon_instructions = 'For the reconstruction task, you will see an image of a flower over a background image.</p>\
+                        <p>Using the dials at the bottom of the screen, reconstruct the colour and shape <br> of the flower seen with the background during the learning phase.</p>'+
+                        '<div style="width:100%;">When you are finished, click "Next" to proceed.</p>'+
+                        "Please make your responses as fast and accurately as possible.<br>";
+    var learning_complete = "You have completed the learning phase.<br>\
+                              The test phase will start in 90 seconds.<br>";
+    var test_instructions = "The first test phase is a recognition task.";
+    var test2_instructions = "The second test phase is a reconstruction task.";
+    var rec_instructions = 'For the recognition task, you will judge whether you have seen each image in the learning phase.<br>\
+                                  You will respond either "Old" or "New".<br><br>\
+                                  "Old" means that you remember seeing the image previously.<br>\
+                                  "New" means that you do not remember the image at all.<br><br>\
+                                  Please make your responses as fast and accurately as possible.<br><br>';        
+    var rec_test_complete = "You have completed the recognition test phase.<br>\
+                          The second test phase will start in 90 seconds.<br>";
+    var recon_test_complete = "You have completed the reconstruction test phase.<br>\
+                            Please proceed to the debreifing.<br>";
+
+    // general settings
+    var instruction_time = 3000;
+    var waiting_time = 3;
+    var count_down = waiting_time;
+    var num_trials = 5;                        
+
+    // category learning task
     var fixation_time = 1000;
     var stim_time = 3500;
     var bkg_time = 500;
     var feedback_time = 1000;
     var stim_question = "Is this <i>sun-preferring</i> or <i>shade-preferring</i>?";
+    var pos_feedback_img = 'assets/img/smile.png';
+    var pos_feedback_aud = 'assets/audio/positive.wav';
+    var neg_feedback_img = 'assets/img/frown.png';
+    var neg_feedback_aud = 'assets/audio/negative.wav';
+
+    // old/new recognition task
     var rec_time = 1500;
     var rec_iti = 1000;
     var rec_question = "Is this image old or new?";
 
-    // stimuli: flower
-    var stimuli = [
-        {stimulus: 'assets/img/flower1.png',  group: 'sun', background: 'assets/img/backgrounds/abbey.jpg', lure: 'assets/img/backgrounds/abbey_2.jpg'},
-        {stimulus: 'assets/img/flower2.png',  group: 'sun', background: 'assets/img/backgrounds/airfield.jpg', lure: 'assets/img/backgrounds/airfield_2.jpg'},
-        {stimulus: 'assets/img/flower3.png',  group: 'shade', background: 'assets/img/backgrounds/alcove.jpg', lure: 'assets/backgrounds/img/alcove_2.jpg'},
-        {stimulus: 'assets/img/flower4.png',  group: 'shade', background: 'assets/img/backgrounds/artist_loft.jpg', lure: 'assets/backgrounds/img/artist_loft_2.jpg'},
-    ]
-    // backgrounds and matching lures
-    var backgrounds = [
-        {background: 'assets/img/backgrounds/abbey.jpg', lure: 'assets/img/backgrounds/abbey_2.jpg'},
-        {background: 'assets/img/backgrounds/airfield.jpg', lure: 'assets/img/backgrounds/airfield_2.jpg'},
-        {background: 'assets/img/backgrounds/alcove.jpg', lure: 'assets/img/backgrounds/alcove_2.jpg'},
-        {background: 'assets/img/backgrounds/amphitheatre.jpg', lure: 'assets/img/backgrounds/amphitheatre_2.jpg'},
-        {background: 'assets/img/backgrounds/amusement_park.jpg', lure: 'assets/img/backgrounds/amusement_park_2.jpg'},
-/*         {background: 'assets/img/backgrounds/apartment_building.jpg', lure: 'assets/img/backgrounds/apartment_building_2.jpg'},
-        {background: 'assets/img/backgrounds/aqueduct.jpg', lure: 'assets/img/backgrounds/aqueduct_2.jpg'},
-        {background: 'assets/img/backgrounds/arch.jpg', lure: 'assets/img/backgrounds/arch_2.jpg'},
-        {background: 'assets/img/backgrounds/archive.jpg', lure: 'assets/img/backgrounds/archive_2.jpg'},
-        {background: 'assets/img/backgrounds/arena_hockey.jpg', lure: 'assets/img/backgrounds/arena_hockey_2.jpg'},
-        {background: 'assets/img/backgrounds/art_studio.jpg', lure: 'assets/img/backgrounds/art_studio_2.jpg'},
-        {background: 'assets/img/backgrounds/artist_loft.jpg', lure: 'assets/img/backgrounds/artist_loft_2.jpg'},
-        {background: 'assets/img/backgrounds/athletic_field.jpg', lure: 'assets/img/backgrounds/athletic_field_2.jpg'},
-        {background: 'assets/img/backgrounds/attic.jpg', lure: 'assets/img/backgrounds/attic_2.jpg'},
-        {background: 'assets/img/backgrounds/auditorium.jpg', lure: 'assets/img/backgrounds/auditorium_2.jpg'},
-        {background: 'assets/img/backgrounds/auto_factory.jpg', lure: 'assets/img/backgrounds/auto_factory_2.jpg'},
-        {background: 'assets/img/backgrounds/auto_showroom.jpg', lure: 'assets/img/backgrounds/auto_showroom_2.jpg'},
-        {background: 'assets/img/backgrounds/badlands.jpg', lure: 'assets/img/backgrounds/badlands_2.jpg'},
-        {background: 'assets/img/backgrounds/bakery.jpg', lure: 'assets/img/backgrounds/bakery_2.jpg'},
-        {background: 'assets/img/backgrounds/balcony_interior.jpg', lure: 'assets/img/backgrounds/balcony_interior_2.jpg'},
-        {background: 'assets/img/backgrounds/ball_pit.jpg', lure: 'assets/img/backgrounds/ball_pit_2.jpg'},
-        {background: 'assets/img/backgrounds/ballroom.jpg', lure: 'assets/img/backgrounds/ballroom_2.jpg'},
-        {background: 'assets/img/backgrounds/bamboo_forest.jpg', lure: 'assets/img/backgrounds/bamboo_forest_2.jpg'},
-        {background: 'assets/img/backgrounds/banquet_hall.jpg', lure: 'assets/img/backgrounds/banquet_hall_2.jpg'},
-        {background: 'assets/img/backgrounds/bar.jpg', lure: 'assets/img/backgrounds/bar_2.jpg'},
-        {background: 'assets/img/backgrounds/barn.jpg', lure: 'assets/img/backgrounds/barn_2.jpg'},
-        {background: 'assets/img/backgrounds/baseball_field.jpg', lure: 'assets/img/backgrounds/baseball_field_2.jpg'},
-        {background: 'assets/img/backgrounds/basilica.jpg', lure: 'assets/img/backgrounds/basilica_2.jpg'},
-        {background: 'assets/img/backgrounds/basketball_court.jpg', lure: 'assets/img/backgrounds/basketball_court_2.jpg'},
-        {background: 'assets/img/backgrounds/bathroom_public.jpg', lure: 'assets/img/backgrounds/bathroom_public_2.jpg'},
-        {background: 'assets/img/backgrounds/bay_window.jpg', lure: 'assets/img/backgrounds/bay_window_2.jpg'},
-        {background: 'assets/img/backgrounds/bayou.jpg', lure: 'assets/img/backgrounds/bayou_2.jpg'},
-        {background: 'assets/img/backgrounds/bazaar_outdoors.jpg', lure: 'assets/img/backgrounds/bazaar_outdoors_2.jpg'},
-        {background: 'assets/img/backgrounds/beach.jpg', lure: 'assets/img/backgrounds/beach_2.jpg'},
-        {background: 'assets/img/backgrounds/beach_house.jpg', lure: 'assets/img/backgrounds/beach_house_2.jpg'},
-        {background: 'assets/img/backgrounds/beauty_salon.jpg', lure: 'assets/img/backgrounds/beauty_salon_2.jpg'},
-        {background: 'assets/img/backgrounds/bedroom.jpg', lure: 'assets/img/backgrounds/bedroom_2.jpg'},
-        {background: 'assets/img/backgrounds/beer_garden.jpg', lure: 'assets/img/backgrounds/beer_garden_2.jpg'},
-        {background: 'assets/img/backgrounds/berth.jpg', lure: 'assets/img/backgrounds/berth_2.jpg'},
-        {background: 'assets/img/backgrounds/bistro_indoor.jpg', lure: 'assets/img/backgrounds/bistro_indoor_2.jpg'},
-        {background: 'assets/img/backgrounds/bistro_outdoor.jpg', lure: 'assets/img/backgrounds/bistro_outdoor_2.jpg'},
-        {background: 'assets/img/backgrounds/boardwalk.jpg', lure: 'assets/img/backgrounds/boardwalk_2.jpg'},
-        {background: 'assets/img/backgrounds/boat_deck.jpg', lure: 'assets/img/backgrounds/boat_deck_2.jpg'},
-        {background: 'assets/img/backgrounds/boathouse.jpg', lure: 'assets/img/backgrounds/boathouse_2.jpg'},
-        {background: 'assets/img/backgrounds/bookstore.jpg', lure: 'assets/img/backgrounds/bookstore_2.jpg'},
-        {background: 'assets/img/backgrounds/botanical_gardens.jpg', lure: 'assets/img/backgrounds/botanical_gardens_2.jpg'},
-        {background: 'assets/img/backgrounds/boxing_ring.jpg', lure: 'assets/img/backgrounds/boxing_ring_2.jpg'},
-        {background: 'assets/img/backgrounds/bridge.jpg', lure: 'assets/img/backgrounds/bridge_2.jpg'},
-        {background: 'assets/img/backgrounds/bull_ring.jpg', lure: 'assets/img/backgrounds/bull_ring_2.jpg'},
-        {background: 'assets/img/backgrounds/bus_interior.jpg', lure: 'assets/img/backgrounds/bus_interior_2.jpg'},
-        {background: 'assets/img/backgrounds/bus_station.jpg', lure: 'assets/img/backgrounds/bus_station_2.jpg'},
-        {background: 'assets/img/backgrounds/butte.jpg', lure: 'assets/img/backgrounds/butte_2.jpg'},
-        {background: 'assets/img/backgrounds/cabin.jpg', lure: 'assets/img/backgrounds/cabin_2.jpg'},
-        {background: 'assets/img/backgrounds/cafeteria.jpg', lure: 'assets/img/backgrounds/cafeteria_2.jpg'},
-        {background: 'assets/img/backgrounds/campus.jpg', lure: 'assets/img/backgrounds/campus_2.jpg'},
-        {background: 'assets/img/backgrounds/canal_natural.jpg', lure: 'assets/img/backgrounds/canal_natural_2.jpg'},
-        {background: 'assets/img/backgrounds/candy_store.jpg', lure: 'assets/img/backgrounds/candy_store_2.jpg'},
-        {background: 'assets/img/backgrounds/canyon.jpg', lure: 'assets/img/backgrounds/canyon_2.jpg'},
-        {background: 'assets/img/backgrounds/car_back_seat.jpg', lure: 'assets/img/backgrounds/car_back_seat_2.jpg'},
-        {background: 'assets/img/backgrounds/carrousel.jpg', lure: 'assets/img/backgrounds/carrousel_2.jpg'},
-        {background: 'assets/img/backgrounds/castle.jpg', lure: 'assets/img/backgrounds/castle_2.jpg'},
-        {background: 'assets/img/backgrounds/catacombs.jpg', lure: 'assets/img/backgrounds/catacombs_2.jpg'},
-        {background: 'assets/img/backgrounds/cathedral_indoor.jpg', lure: 'assets/img/backgrounds/cathedral_indoor_2.jpg'},
-        {background: 'assets/img/backgrounds/chalet.jpg', lure: 'assets/img/backgrounds/chalet_2.jpg'},
-        {background: 'assets/img/backgrounds/childs_room.jpg', lure: 'assets/img/backgrounds/childs_room_2.jpg'},
-        {background: 'assets/img/backgrounds/classroom.jpg', lure: 'assets/img/backgrounds/classroom_2.jpg'},
-        {background: 'assets/img/backgrounds/cliff.jpg', lure: 'assets/img/backgrounds/cliff_2.jpg'},
-        {background: 'assets/img/backgrounds/closet.jpg', lure: 'assets/img/backgrounds/closet_2.jpg'},
-        {background: 'assets/img/backgrounds/clothing_store.jpg', lure: 'assets/img/backgrounds/clothing_store_2.jpg'},
-        {background: 'assets/img/backgrounds/cockpit.jpg', lure: 'assets/img/backgrounds/cockpit_2.jpg'},
-        {background: 'assets/img/backgrounds/coffee_shop.jpg', lure: 'assets/img/backgrounds/coffee_shop_2.jpg'},
-        {background: 'assets/img/backgrounds/conference_room.jpg', lure: 'assets/img/backgrounds/conference_room_2.jpg'},
-        {background: 'assets/img/backgrounds/construction_site.jpg', lure: 'assets/img/backgrounds/construction_site_2.jpg'},
-        {background: 'assets/img/backgrounds/convention_center.jpg', lure: 'assets/img/backgrounds/convention_center_2.jpg'},
-        {background: 'assets/img/backgrounds/coral_reef.jpg', lure: 'assets/img/backgrounds/coral_reef_2.jpg'},
-        {background: 'assets/img/backgrounds/corn_field.jpg', lure: 'assets/img/backgrounds/corn_field_2.jpg'},
-        {background: 'assets/img/backgrounds/corral.jpg', lure: 'assets/img/backgrounds/corral_2.jpg'},
-        {background: 'assets/img/backgrounds/cottage.jpg', lure: 'assets/img/backgrounds/cottage_2.jpg'},
-        {background: 'assets/img/backgrounds/cottage_garden.jpg', lure: 'assets/img/backgrounds/cottage_garden_2.jpg'},
-        {background: 'assets/img/backgrounds/courthouse.jpg', lure: 'assets/img/backgrounds/courthouse_2.jpg'},
-        {background: 'assets/img/backgrounds/courtyard.jpg', lure: 'assets/img/backgrounds/courtyard_2.jpg'},
-        {background: 'assets/img/backgrounds/creek.jpg', lure: 'assets/img/backgrounds/creek_2.jpg'},
-        {background: 'assets/img/backgrounds/crosswalk.jpg', lure: 'assets/img/backgrounds/crosswalk_2.jpg'},
-        {background: 'assets/img/backgrounds/cubicle.jpg', lure: 'assets/img/backgrounds/cubicle_2.jpg'},
-        {background: 'assets/img/backgrounds/dam.jpg', lure: 'assets/img/backgrounds/dam_2.jpg'},
-        {background: 'assets/img/backgrounds/deli.jpg', lure: 'assets/img/backgrounds/deli_2.jpg'},
-        {background: 'assets/img/backgrounds/desert.jpg', lure: 'assets/img/backgrounds/desert_2.jpg'},
-        {background: 'assets/img/backgrounds/desert_road.jpg', lure: 'assets/img/backgrounds/desert_road_2.jpg'},
-        {background: 'assets/img/backgrounds/desert_vegetation.jpg', lure: 'assets/img/backgrounds/desert_vegetation_2.jpg'},
-        {background: 'assets/img/backgrounds/diner.jpg', lure: 'assets/img/backgrounds/diner_2.jpg'},
-        {background: 'assets/img/backgrounds/dining_room.jpg', lure: 'assets/img/backgrounds/dining_room_2.jpg'},
-        {background: 'assets/img/backgrounds/dock.jpg', lure: 'assets/img/backgrounds/dock_2.jpg'},
-        {background: 'assets/img/backgrounds/doorway.jpg', lure: 'assets/img/backgrounds/doorway_2.jpg'},
-        {background: 'assets/img/backgrounds/elevator_lobby.jpg', lure: 'assets/img/backgrounds/elevator_lobby_2.jpg'},
-        {background: 'assets/img/backgrounds/escilator.jpg', lure: 'assets/img/backgrounds/escilator_2.jpg'},
-        {background: 'assets/img/backgrounds/fastfood_restaurant.jpg', lure: 'assets/img/backgrounds/fastfood_restaurant_2.jpg'},
-        {background: 'assets/img/backgrounds/galley.jpg', lure: 'assets/img/backgrounds/galley_2.jpg'},
-        {background: 'assets/img/backgrounds/general_store_indoors.jpg', lure: 'assets/img/backgrounds/general_store_indoors_2.jpg'},
-        {background: 'assets/img/backgrounds/greenhouse.jpg', lure: 'assets/img/backgrounds/greenhouse_2.jpg'},
-        {background: 'assets/img/backgrounds/gymnsium.jpg', lure: 'assets/img/backgrounds/gymnsium_2.jpg'},
-        {background: 'assets/img/backgrounds/hanger_indoors.jpg', lure: 'assets/img/backgrounds/hanger_indoors_2.jpg'},
-        {background: 'assets/img/backgrounds/hardware_store.jpg', lure: 'assets/img/backgrounds/hardware_store_2.jpg'},
-        {background: 'assets/img/backgrounds/home_theatre.jpg', lure: 'assets/img/backgrounds/home_theatre_2.jpg'},
-        {background: 'assets/img/backgrounds/hospital_room.jpg', lure: 'assets/img/backgrounds/hospital_room_2.jpg'} */
-    ]
+    // reconstruction task
 
-    // welcome
-    var start_trial = {
-        type: 'html-keyboard-response',
-        stimulus: 'Welcome! Press any key to begin.'
-    }
-    
-
-
-    // instructions for categorization learning task
-    var instruction_trial = {
-        type: 'html-keyboard-response',
-        stimulus: cat_instructions
-    }
-    
-
-    // 1) fixation cross
-    var fixation = {  
-        type: 'html-keyboard-response',
-        stimulus: '+',
-        choices: jsPsych.NO_KEYS,
-        trial_duration: fixation_time
-    }
-
-    // 2) stimulus + background
-    var stim = {  
-        type: 'image-bkg-keyboard-response',
-        stimulus: jsPsych.timelineVariable('stimulus'),
-        //stimulus_height: 100,
-        background: jsPsych.timelineVariable('background'),
-        choices: ['0', '1'],
-        prompt: '<p>'+stim_question+'</p><br><div style="float: left;">1 - sun</div><div style="float: right;">0 - shade</div>',
-        response_ends_trial: false,
-        trial_duration: stim_time,
-        data: {
-            stimulus_type: jsPsych.timelineVariable('group')
-        },
-        on_finish: function(data){
-            if( ( (data.key_press == 48) && (data.stimulus_type == 'shade') ) // 48 numeric code for '0'
-                || ( (data.key_press == 49) && (data.stimulus_type == 'sun') ) ){
-                data.correct = true;
-            } else {
-                data.correct = false;
-            }
-        }
-    }
-
-    // 3) background
-    var background = {  
-        type: 'image-keyboard-response',
-        stimulus: jsPsych.timelineVariable('background'),
-        choices: jsPsych.NO_KEYS,
-        prompt: '<p>'+stim_question+'</p><br><div style="float: left;">1 - sun</div><div style="float: right;">0 - shade</div>',
-        trial_duration: bkg_time
-    }
-
-    // 4) feedback
-    var feedback = {
-        type: 'html-keyboard-response',
-        stimulus: function() {
-            var last_trial_correct = jsPsych.data.get().last(2).values()[0].correct;
-            var html = "";
-
-            if(last_trial_correct){
-                html += "<p style='color:green; font-size:100px; line-height: 0.2; margin-top: 5%;'>Correct!<br>\
-                        <span style='color:green; font-size:200px; line-height: 1.0;'>&#9786;</span>";
-            } else {
-                html += "<p style='color:red; font-size:100px; line-height: 0.5; margin-top: 5%;'>Wrong.<br>\
-                        <span style='color:red; font-size:200px; line-height: 1.0;'>&#9785;</span>";
-            }
-            
-            html += "<br><span style='color:black; font-size:75px; line-height: 1.5;'>This flower likes <i>"+jsPsych.data.get().last(2).values()[0].stimulus_type+"</i>.</span><br>";
-            
-            if(jsPsych.data.get().last(2).values()[0].stimulus_type == 'shade') {
-                html += "<img src='assets/img/cloud.png' width='250' height='250'>";
-            } else {
-                html += "<img src='assets/img/sun.png' width='250' height='250'>";
-            }
-
-            html += "</p>"
-            
-            return html;
-        },
-        choices: jsPsych.NO_KEYS,
-        trial_duration: feedback_time
-    }
-
-    // entire categorization trial set
-    var categorization_trials = {
-        timeline : [fixation, stim, background,feedback],
-        timeline_variables: stimuli
-    }
-    timeline.push(start_trial);
-    timeline.push(instruction_trial);
-    timeline.push(categorization_trials);
-
-
-    // 5 min sudoku
-
-    // 1) instructions
-
-    // 2) sudoku
-
-
-    // recognition task PART I (scenes)
-
-    // Instructions for recognition task
-    var rec_instruction_trial = {
-        type: 'html-keyboard-response',
-        stimulus: rec_instructions
-    }
-
-
-    // stimuli for recognition test are old images (48 - 24 create, 24 update), lure images (48 - 24 create, 24 update), new images (24)
-   //var rec_stimuli = A1_set.concat(A2_set).concat(B1_set.slice(1,25))
-   //var rec_stimuli = A1_set;
-
-    var rec_background = {
-        type: 'image-keyboard-response',
-        stimulus: jsPsych.timelineVariable('background'),
-        choices: ['0', '1'],
-        prompt: '<p>'+rec_question+'</p><br><div style="float: left;">OLD</div><div style="float: right;">NEW</div>',
-        trial_duration: rec_time
-
-    }
-
-    var rec_fixation = {  
-        type: 'html-keyboard-response',
-        stimulus: '+',
-        choices: jsPsych.NO_KEYS,
-        trial_duration: rec_iti
-    }
-
-    var recognition_trials = {
-        timeline: [rec_fixation, rec_background],
-        timeline_variables: backgrounds
-
-    }
-    timeline.push(rec_instruction_trial);
-    timeline.push(recognition_trials)
-
-
-    // recognition task PART II (build/association)
-     var recon_trial = {
-        type: 'external-html',
-        url: 'flower_generator_index.html',
-        cont_key: ['0'],
-        execute_script: true
-     }
-    timeline.push(recon_trial);
-
-    // thank you
-    var end_trial = {
-        type: 'html-keyboard-response',
-        stimulus: 'Thanks! :)'
-    }
-    timeline.push(end_trial);
-
-    // run experiment
-    jsPsych.init({
-        timeline: timeline,
-        preload_images: [
-            'assets/img/flower1.png', 'assets/img/flower2.png', 'assets/img/flower3.png', 'assets/img/flower4.png',
+    // stimuli - all backgrounds
+    var all_backgrounds = [
             'assets/img/backgrounds/abbey.jpg', 'assets/img/backgrounds/abbey_2.jpg',
             'assets/img/backgrounds/airfield.jpg', 'assets/img/backgrounds/airfield_2.jpg',
             'assets/img/backgrounds/alcove.jpg', 'assets/img/backgrounds/alcove_2.jpg',
@@ -429,7 +216,390 @@
             'assets/img/backgrounds/hardware_store.jpg', 'assets/img/backgrounds/hardware_store_2.jpg',
             'assets/img/backgrounds/home_theatre.jpg', 'assets/img/backgrounds/home_theatre_2.jpg',
             'assets/img/backgrounds/hospital_room.jpg', 'assets/img/backgrounds/hospital_room_2.jpg'
-        ], 
+        ]
+
+    // stimuli - backgrounds in sets
+    var backgrounds = [
+        [
+            ['abbey.jpg','airfield.jpg','alcove.jpg','amphitheatre.jpg','amusement_park.jpg','apartment_building.jpg','aqueduct.jpg','arch.jpg','athletic_field.jpg','badlands.jpg','bamboo_forest.jpg','barn.jpg','baseball_field.jpg','basilica.jpg','bayou.jpg','bazaar_outdoors.jpg','beach_house.jpg','beach.jpg','beer_garden.jpg','boardwalk.jpg','boat_deck.jpg','botanical_gardens.jpg','bridge.jpg','bull_ring.jpg','archive.jpg','arena_hockey.jpg','art_studio.jpg','artist_loft.jpg','attic.jpg','auditorium.jpg','auto_factory.jpg','auto_showroom.jpg','bakery.jpg','balcony_interior.jpg','ball_pit.jpg','ballroom.jpg','banquet_hall.jpg','bar.jpg','basketball_court.jpg','bathroom_public.jpg','bay_window.jpg','beauty_salon.jpg','bedroom.jpg','berth.jpg','bistro_indoor.jpg','bistro_outdoor.jpg','boathouse.jpg','bookstore.jpg'],
+            ['abbey_2.jpg','airfield_2.jpg','alcove_2.jpg','amphitheatre_2.jpg','amusement_park_2.jpg','apartment_building_2.jpg','aqueduct_2.jpg','arch_2.jpg','athletic_field_2.jpg','badlands_2.jpg','bamboo_forest_2.jpg','barn_2.jpg','baseball_field_2.jpg','basilica_2.jpg','bayou_2.jpg','bazaar_outdoors_2.jpg','beach_house_2.jpg','beach_2.jpg','beer_garden_2.jpg','boardwalk_2.jpg','boat_deck_2.jpg','botanical_gardens_2.jpg','bridge_2.jpg','bull_ring_2.jpg','archive_2.jpg','arena_hockey_2.jpg','art_studio_2.jpg','artist_loft_2.jpg','attic_2.jpg','auditorium_2.jpg','auto_factory_2.jpg','auto_showroom_2.jpg','bakery_2.jpg','balcony_interior_2.jpg','ball_pit_2.jpg','ballroom_2.jpg','banquet_hall_2.jpg','bar_2.jpg','basketball_court_2.jpg','bathroom_public_2.jpg','bay_window_2.jpg','beauty_salon_2.jpg','bedroom_2.jpg','berth_2.jpg','bistro_indoor_2.jpg','bistro_outdoor_2.jpg','boathouse_2.jpg','bookstore_2.jpg']
+        ],
+        [
+            ['bus_station.jpg','butte.jpg','cabin.jpg','campus.jpg','canal_natural.jpg','canyon.jpg','carrousel.jpg','castle.jpg','chalet.jpg','cliff.jpg','construction_site.jpg','coral_reef.jpg','corn_field.jpg','corral.jpg','cottage_garden.jpg','cottage.jpg','courthouse.jpg','courtyard.jpg','creek.jpg','crosswalk.jpg','dam.jpg','desert_road.jpg','desert_vegetation.jpg','diner.jpg','boxing_ring.jpg','bus_interior.jpg','cafeteria.jpg','candy_store.jpg','car_back_seat.jpg','catacombs.jpg','cathedral_indoor.jpg','childs_room.jpg','classroom.jpg','closet.jpg','clothing_store.jpg','cockpit.jpg','coffee_shop.jpg','conference_room.jpg','cubicle.jpg','deli.jpg','dining_room.jpg','elevator_lobby.jpg','escilator.jpg','fastfood_restaurant.jpg','galley.jpg','general_store_indoors.jpg','greenhouse.jpg','gymnsium.jpg'],
+            ['bus_station_2.jpg','butte_2.jpg','cabin_2.jpg','campus_2.jpg','canal_natural_2.jpg','canyon_2.jpg','carrousel_2.jpg','castle_2.jpg','chalet_2.jpg','cliff_2.jpg','construction_site_2.jpg','coral_reef_2.jpg','corn_field_2.jpg','corral_2.jpg','cottage_garden_2.jpg','cottage_2.jpg','courthouse_2.jpg','courtyard_2.jpg','creek_2.jpg','crosswalk_2.jpg','dam_2.jpg','desert_road_2.jpg','desert_vegetation_2.jpg','diner_2.jpg','boxing_ring_2.jpg','bus_interior_2.jpg','cafeteria_2.jpg','candy_store_2.jpg','car_back_seat_2.jpg','catacombs_2.jpg','cathedral_indoor_2.jpg','childs_room_2.jpg','classroom_2.jpg','closet_2.jpg','clothing_store_2.jpg','cockpit_2.jpg','coffee_shop_2.jpg','conference_room_2.jpg','cubicle_2.jpg','deli_2.jpg','dining_room_2.jpg','elevator_lobby_2.jpg','escilator_2.jpg','fastfood_restaurant_2.jpg','galley_2.jpg','general_store_indoors_2.jpg','greenhouse_2.jpg','gymnsium_2.jpg']
+        ]
+    ]
+    var back_copy = [[backgrounds[0][0].slice(), backgrounds[0][1].slice()], [backgrounds[1][0].slice(), backgrounds[1][1].slice()]];
+
+    // stimuli - flower sets
+    //var random_set = _.shuffle(['set0','set60', 'set120', 'set180', 'set240', 'set300']);
+    //var group_set = _.shuffle([['sun', 'sun', 'shade', 'shade'], ['shade', 'shade', 'sun', 'sun']]);
+    var random_set = ['set0','set60', 'set120', 'set180', 'set240', 'set300'];
+    var set_folder = random_set[0];
+    var categories = ['B','A','A','B','B','A','A','B','A','B','A','B','A','A','B','B','A','A','B','B','B','A','A','B','B','A','B','A','A','B','A','B','A','A','B','B','B','A','A','B','B','A','B','A','A','B','B','A'];
+    var group_set = [0, 1]; 
+    var gp = group_set[0]; // 0: 'A'='sun', 1:'B'='sun'
+    var backgrounds_folder = 'backgrounds'
+    var background_set = 1; // chosen set of original and lure backgrounds
+    var lure = 1; // which list of background set is lures (vs. original)
+    
+    // category learning stimuli (flower, sun/shade, background, lure)
+    var stimuli = []; 
+    var flowers = [];       
+    for (i = 0; i < num_trials; i+=4) {
+        for (x=0;x<4;x++) {
+            if ((categories[i+x]=='A' && gp==0) || (categories[i+x]=='B' && gp==1)){
+                var g = 'sun';
+            } else {
+                var g = 'shade';
+            }
+            var randomIndex = Math.floor(Math.random()*(num_trials-x-i)); // randomly select background image
+            stimuli.push(
+                {
+                    stimulus: 'assets/img/flowers/'+set_folder+'/flower'+(i+x+1).toString() +'.png',
+                    category: categories[i],
+                    group: g,
+                    create: (x==0),
+                    background: 'assets/img/'+backgrounds_folder+'/'+back_copy[background_set][1-lure].splice(randomIndex, 1)[0],
+                    lure: 'assets/img/'+backgrounds_folder+'/'+back_copy[background_set][lure].splice(randomIndex, 1)[0]
+                }
+            )
+            flowers.push('assets/img/flowers/'+set_folder+'/flower'+(i+x+1).toString() +'.png');
+        }      
+    }
+
+    /****************** consent *************************/
+    
+    // welcome
+    var start_trial = {
+        type: 'instructions',
+        pages: [overview, learning_ins, start_ins],
+        show_clickable_nav: true,
+        show_page_number: true
+    };
+
+    // consent
+    var consent_inst = {
+        type: 'html-button-response',
+        stimulus: html='<p style="color: black; font-size: 20px;">'
+           +'We would like to get your consent before starting the experiment.</p>',
+        choices: ['Consent page'], 
+        data: {disp_type: 'consent-instruction'}
+    }
+    var check_consent = function(elem) {
+        if (document.getElementById('agree_checkbox').checked) {                             
+            return true;
+        } else {
+            alert("If you wish to participate, you must check the box next to the statement 'I agree.'");
+            return false;
+        }
+        return false;
+    };
+    var consent_page = {
+        type: 'external-html',
+        url: "assets/materials/consent.html",
+        cont_btn: "start",
+        check_fn: check_consent,
+        data: {disp_type: 'online_consent_form'}
+    }
+
+    /****************** PART I - category learning *************************/
+
+    // instructions for categorization learning task
+    var cat_instruction_trial = {
+        type: 'html-keyboard-response',
+        stimulus: cat_instructions
+    }  
+
+    // 1) fixation cross
+    var fixation = {  
+        type: 'html-keyboard-response',
+        stimulus: '+',
+        choices: jsPsych.NO_KEYS,
+        trial_duration: fixation_time
+    }
+
+    // 2) stimulus + background
+    var stim = {  
+        type: 'image-bkg-button-response',
+        stimulus: jsPsych.timelineVariable('stimulus'),
+        background: jsPsych.timelineVariable('background'),
+        choices: ['sun', 'shade'],
+        prompt: '<p>'+stim_question+'</p>',
+        response_ends_trial: false,
+        trial_duration: stim_time+bkg_time,
+        stimulus_duration: stim_time,
+        data: {
+            stimulus_type: jsPsych.timelineVariable('group')
+        },
+        on_finish: function(data){
+            if( ( (data.button_pressed == 1) && (data.stimulus_type == 'shade') )
+                || ( (data.button_pressed == 0) && (data.stimulus_type == 'sun') ) ){
+                data.correct = true;
+            } else {
+                data.correct = false;
+            }
+        }
+    }
+
+    // 4) feedback
+    var feedback = {
+        type: 'html-keyboard-response',
+        stimulus: function() {
+            var last_trial_correct = jsPsych.data.get().last().values()[0].correct;
+            var html = "";
+
+            if(last_trial_correct){
+                html += "<p style='color:green; font-size:100px; line-height: 0.2; margin-top: 10%;'>Correct!<br><br><br><br>"+
+                        "<img src="+pos_feedback_img+" width='160'>"+
+                        '<audio autoplay>\
+                            <source src="'+pos_feedback_aud+'" type="audio/wav">\
+                            Your browser does not support the audio element.\
+                        </audio>';
+        
+            } else {
+                html += "<p style='color:red; font-size:100px; line-height: 0.2; margin-top: 10%;'>Wrong.<br><br><br><br>"+
+                        "<img src="+neg_feedback_img+" width='160'>"+
+                        '<audio autoplay>\
+                            <source src="'+neg_feedback_aud+'" type="audio/wav">\
+                            Your browser does not support the audio element.\
+                        </audio>';
+                      
+            }
+            
+            html += "<br><span style='color:black; font-size:75px; line-height: 1.5;'>This flower likes <i>"+jsPsych.data.get().last().values()[0].stimulus_type+"</i>.</span><br>";
+            
+            if(jsPsych.data.get().last().values()[0].stimulus_type == 'shade') {
+                html += "<img src='assets/img/cloud.png' width='300'>";
+            } else {
+                html += "<img src='assets/img/sun.png' width='300'>";
+            }
+
+            html += "</p>"
+            
+            return html;
+        },
+        choices: jsPsych.NO_KEYS,
+        trial_duration: feedback_time
+    }
+    
+    // entire categorization trial set
+    var categorization_trials = {
+        timeline : [fixation, stim,feedback],
+        timeline_variables: stimuli    
+    }
+
+    // draw instructions for ending learning phase
+    var draw_end_learning = {
+        type: 'html-keyboard-response',
+        choices: jsPsych.NO_KEYS,
+        stimulus: learning_complete,
+        trial_duration: instruction_time
+    };
+    
+    // draw timer
+    var timer_start = {
+        type: 'html-keyboard-response',
+        choices: jsPsych.NO_KEYS,
+        stimulus: function(){
+          return count_down;
+        },
+        trial_duration: 1000 // ms
+    };
+
+    var timer_loop = {
+        timeline: [timer_start],
+        loop_function: function(){
+            if (count_down == 0) {
+            count_down = waiting_time;
+            return false;
+            } else {
+            count_down -= 1;
+            return true;
+            };
+        }  
+    }
+
+    
+
+    /****************** Break *************************/
+    // 5 min sudoku
+
+    // 1) instructions
+
+    // 2) sudoku
+
+    /****************** PART II - Memory test *************************/
+
+    // 1) Scene recognition
+
+    // Instructions for recognition task
+    var rec_instruction_trial = {
+        type: 'instructions',
+        pages: [test_instructions, rec_instructions, start_ins],
+        show_clickable_nav: true,
+        show_page_number: true
+    };
+
+    // stimuli for recognition test are old images (48 - 24 create, 24 update), lure images (48 - 24 create, 24 update), new images (24)
+    var rec_backs = []
+    for (i=0;i<num_trials; i++) {
+       rec_backs.push({
+           background: 'assets/img/'+backgrounds_folder+'/'+backgrounds[background_set][1-lure][i],
+           lure: 0,
+           create: 0
+        });
+       rec_backs.push({
+           background: 'assets/img/'+backgrounds_folder+'/'+backgrounds[background_set][lure][i],
+           lure: 1,
+           create: 0
+       });
+    }
+    for (i=0; i<(num_trials/2); i++) {
+        rec_backs.push({
+            background: 'assets/img/'+backgrounds_folder+'/'+backgrounds[1-background_set][1-lure][i],
+            lure: -1,
+            create: 0
+        });
+    }
+
+    // a) old/new recognition trial
+    var rec_background = {
+        type: 'image-button-response',
+        stimulus: jsPsych.timelineVariable('background'),
+        choices: ['Old', 'New'],
+        prompt: '<p>'+rec_question+'</p>',
+        response_ends_trial: false,
+        trial_duration: rec_time,
+        data: {
+            background: jsPsych.timelineVariable('background'),
+            create_trial: jsPsych.timelineVariable('create'),
+            stimulus_type: jsPsych.timelineVariable('lure')
+        },
+        on_finish: function(data){
+            // "old" and actually old (0), "new" and lure (1) or new (-1)
+            if( ( (data.button_pressed == 1) && (data.stimulus_type == 0) )
+                || ( (data.button_pressed == 0) && (data.stimulus_type == 1) ) 
+                || ( (data.button_pressed == 0) && (data.stimulus_type == -1) )){
+                data.correct = true;
+            } else {
+                data.correct = false;
+            }
+        }
+    }
+
+    // b) fixation
+    var rec_fixation = {  
+        type: 'html-keyboard-response',
+        stimulus: '+',
+        choices: jsPsych.NO_KEYS,
+        trial_duration: rec_iti
+    }
+
+    var recognition_trials = {
+        timeline: [rec_fixation, rec_background],
+        timeline_variables: rec_backs,
+        randomize_order: true
+    }
+
+    // draw instructions for ending recognition phase
+    var draw_end_rec_test = {
+        type: 'html-keyboard-response',
+        choices: jsPsych.NO_KEYS,
+        stimulus: rec_test_complete,
+        trial_duration: instruction_time
+    };
+
+    // 2) Stimulus reconstruction
+
+    // only actually seen backgrounds
+    var recon_backs = []
+    for (i=0;i<num_trials; i++) {
+       recon_backs.push({
+           background: 'assets/img/'+backgrounds_folder+'/'+backgrounds[background_set][1-lure][i],
+           lure: 0,
+           create: 0
+        });
+    }
+
+    // instructions
+    var recon_instruction_trial = {
+        type: 'instructions',
+        pages: [test2_instructions, recon_instructions, start_ins],
+        show_clickable_nav: true,
+        show_page_number: true
+    };
+
+    // reconstruction trial
+    var recon_trial = {
+        type: 'external-html-flower-recon',
+        url: 'flower_generator_index.html',
+        background: jsPsych.timelineVariable('background'),
+        execute_script: true,
+        cont_btn: "next",
+        on_finish: function(data){
+            if(data.color > 180) {
+                data.correct = true;
+            } else {
+                data.correct = false;
+            }
+        }
+    }
+
+    var reconstruction_trials = {
+        timeline: [rec_fixation, recon_trial],
+        timeline_variables: recon_backs,
+        randomize_order: true
+    }
+
+    // draw instructions for ending recognition phase
+    var draw_end_recon_test = {
+        type: 'html-button-response',
+        choices: ['Continue'],
+        stimulus: recon_test_complete,
+        trial_duration: instruction_time
+    };
+
+    /****************** End *************************/
+
+    // debriefing
+    var debrief_page = {
+        type: 'external-html',
+        url: "assets/materials/debreifing_letter.html",
+        cont_btn: "finish",            
+        data: {disp_type: 'debriefing_page'}
+    }    
+    
+    // thank you
+    var end_trial = {
+        type: 'html-keyboard-response',
+        stimulus: '<p style="font-size:300%;">Thank you for your participation!</p><img src="'+pos_feedback_img+'"></img>'
+    }
+
+    /****************** End *************************/
+    timeline.push(consent_inst);
+    timeline.push(consent_page);
+    timeline.push(start_trial);
+
+    timeline.push(categorization_trials);
+    timeline.push(draw_end_learning);
+    timeline.push(timer_loop);
+
+    timeline.push(rec_instruction_trial);
+    timeline.push(recognition_trials);
+    timeline.push(draw_end_rec_test);
+    timeline.push(timer_loop);
+    timeline.push(recon_instruction_trial);
+    timeline.push(reconstruction_trials);
+    timeline.push(draw_end_recon_test);
+
+    timeline.push(debrief_page);
+    timeline.push(end_trial);
+
+    // run experiment
+    jsPsych.init({
+        timeline: timeline,
+        preload_images: [all_backgrounds, 'assets/img/sun.png','assets/img/cloud.png', 'assets/img/smile.png', 'assets/img/frown.png', flowers] , 
         on_finish: function(){jsPsych.data.displayData(); }
     })
 

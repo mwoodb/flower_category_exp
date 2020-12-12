@@ -2,75 +2,65 @@
 <html>
 <head>
 <!-- Load the Paper.js library -->
-<script type="text/javascript" src="js/paper-full.min.js"></script>
 <script type="text/javascript" src="js/rgb2lab.js"></script>
+<script type="text/javascript" src="js/paper-full.min.js"></script>
 <script type="text/paperscript" src="js/flower_generator.js" canvas="myCanvas"></script>  
-<style>
-    .background {
-        position: relative;
-        top: 0;
-        left: 0;
-        max-width: 75%;
-        max-height: 100vh;
-        margin: auto;
+<style type="text/css">
+    html,
+    body {
+        height: 100%;
+        font-size: 50%;
+    }
+    input, button {
+        font-size: 100%;
+    }
+    
+    /* Scale canvas with resize attribute to full size */
+    canvas[resize] {
+        width: 25%;
+        /*height: 30%;*/
     }
 
-    .stimulus {
-        position: absolute;
-        top: 8%;
-        left: 33%;
-        max-width: 100%;
-        max-height: 100vh;
-        margin: auto;
-    }
-
-    #greySquare {
-        display: block;
-        top: 18%;
-        left: 40%;
-        width: 250px;
-        height: 250px;
-        background: lightgrey;
-    }
 </style>
 </head>
 <body>
-    
-<div onload="javascript:update_flower()">
-    
+    <div style="position: relative; top: 0; left: 0;">
+        <canvas id="myCanvas" style="background: lightgray; position: absolute; left: 37.5%; top: 30%; z-index: 2; margin: auto;" width="25%" height="25%" resize="true" data-paper-scope="1"></canvas>
+        <img id="background" src="assets/img/backgrounds/alcove.jpg" style="top: 0; left: 0; max-width: 75%; max-height: 100vh; position: relative; z-index: 0"></img>
+    </div>
+    <div style="text-align:center; width:75%; margin:0 auto; display: inline-block;">
+        <div class="slidecontainer"> colour
+            <input type="range" min="0" max="360" value="180" class="slider" id="x1" style="width: 100%; text-align:center;" onchange="javascript:update_flower()">
+        </div>
+        <div class="slidecontainer"> shape
+            <input type="range" min="1" max="360" value="180" class="slider" id="x2" style="width: 100%" onchange="javascript:update_flower()">
+        </div>
+    </div>
+    <div style="display: inline-block; width:30%; height: 50%;">
+        <button type="button" onclick="next()" id="next">Next</button>
+    </div>
     <script type="text/javascript">
+        window.globals = {x1: -1, x2: 10, x3: 9};
         function update_flower(){
-            let x1 = document.getElementById('x1').value;
-            let x2 = document.getElementById('x2').value;
-            let x3 = document.getElementById('x3').value;
-
-/*             for (var shape=1; shape<13; shape++) {
-                for (var color=0; color<=360; color++){
-                    globals.drawFlower1(color,shape,shape);
-                    globals.download_img(color,shape,shape);
-                }         
-            } */
-            globals.drawFlower1(x1,x2,x3);
-            
+            globals.x1 = document.getElementById('x1').value;
+            globals.x2 = globals.deg2shape(document.getElementById('x2').value);
+            globals.drawFlower1(globals.x1,globals.x2,globals.x3);
         }
 
+        function next() {
+            globals.x1 = -1;
+            globals.x2 = 10;
+            document.getElementById("x1").value = "180";
+            document.getElementById('x2').value = "180";
+            globals.drawFlower1(globals.x1,globals.deg2shape(globals.x2),globals.x3);
+        }
+
+        window.onload = function(){
+            update_flower();
+            var [file_header, file_data] = globals.flower_set(0);
+            globals.export_csv(file_header, file_data, ',', 'order');
+        }
     </script>
-    <div style="float:left;width:20%">
-        <div class="slidecontainer"> Color
-            <input type="range" min="0" max="360" value="0" class="slider" id="x1" onchange="javascript:update_flower()">
-        </div>
-        <div class="slidecontainer"> Petals
-            <input type="range" min="1" max="13" value="7" class="slider" id="x2" onchange="javascript:update_flower()">
-        </div>
-        <div class="slidecontainer"> Center
-            <input type="range" min="1" max="13" value="7" class="slider" id="x3" onchange="javascript:update_flower()">
-        </div>
-    </div>
-    <div style="float:center;width:80%" style="position: relative; left: 0; top: 0; display: grid; height: 100%;">
-        <canvas id="myCanvas" class="stimulus" style="-webkit-user-drag: none; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); position: absolute; z-index: 2;" width="800" height="800" data-paper-scope="1"></canvas>
-        <span id="greySquare" style="position: absolute; z-index: 1;"></span>
-        <img src="assets/img/backgrounds/alcove.jpg" class="background" style="position: relative; z-index: 0"></img>
-    </div>
-</div>
 </body>
+
 </html>

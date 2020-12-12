@@ -154,3 +154,38 @@
   max-height: 100vh;
   margin: auto;
 }
+
+/* jspsych-image-bkg-button-response */
+#jspych-image-bkg-button-response-container {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+#jspsych-image-bkg-button-response-background {
+  position: relative;
+  top: 0;
+  left: 0;
+  max-width: 75%;
+  max-height: 100vh;
+  margin: auto;
+}
+
+#jspsych-image-bkg-button-response-stimulus {
+  position: absolute;
+  top: 30%;
+  left: 37.5%;
+  max-width: 25%;
+  max-height: 100vh;
+  margin: auto;
+}
+
+/* jspych-image-button-response */
+#jspsych-image-button-response-stimulus {
+  position: relative;
+  top: 0;
+  left: 0;
+  max-width: 75%;
+  max-height: 100vh;
+  margin: auto;
+}

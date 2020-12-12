@@ -8,14 +8,15 @@
  *
  **/
 
-jsPsych.plugins["image-button-response"] = (function() {
+jsPsych.plugins["image-bkg-button-response"] = (function() {
 
   var plugin = {};
 
-  jsPsych.pluginAPI.registerPreload('image-button-response', 'stimulus', 'image');
+  jsPsych.pluginAPI.registerPreload('image-bkg-button-response', 'stimulus', 'image');
+  jsPsych.pluginAPI.registerPreload('image-bkg-button-response', 'background', 'image');
 
   plugin.info = {
-    name: 'image-button-response',
+    name: 'image-bkg-button-response',
     description: '',
     parameters: {
       stimulus: {
@@ -23,6 +24,12 @@ jsPsych.plugins["image-button-response"] = (function() {
         pretty_name: 'Stimulus',
         default: undefined,
         description: 'The image to be displayed'
+      },
+      background: {
+        type: jsPsych.plugins.parameterType.IMAGE,
+        pretty_name: 'Background',
+        default: undefined,
+        description: 'The background image to be displayed'
       },
       stimulus_height: {
         type: jsPsych.plugins.parameterType.INT,
@@ -96,9 +103,30 @@ jsPsych.plugins["image-button-response"] = (function() {
   }
 
   plugin.trial = function(display_element, trial) {
+    
+    var html = '<div id="jspych-image-bkg-button-response-container">'
+  
+    // add background
+    html += '<img src="'+trial.background+'" id="jspsych-image-bkg-button-response-background" style="'
+    if(trial.background_height !== null){
+      html += 'height:'+trial.background_height+'%; '
+      if(trial.background_width == null && trial.maintain_aspect_ratio){
+        html += 'width: auto; ';
+      }
+    }
+    if(trial.background_width !== null){
+      html += 'width:'+trial.background_width+'%; '
+      if(trial.background_height == null && trial.maintain_aspect_ratio){
+        html += 'height: auto; ';
+      }
+    } 
+
+    html += '"></img>';
+
+    //html += '<p style="background-color:lightgray; position: absolute; top: 30%; left: 37.5%; max-width: 30%; max-height: 30%; margin: auto;"></p>';
 
     // display stimulus
-    var html = '<img src="'+trial.stimulus+'" id="jspsych-image-button-response-stimulus" style="';
+    html += '<img src="'+trial.stimulus+'" id="jspsych-image-bkg-button-response-stimulus" style="';
     if(trial.stimulus_height !== null){
       html += 'height:'+trial.stimulus_height+'px; '
       if(trial.stimulus_width == null && trial.maintain_aspect_ratio){
@@ -112,6 +140,8 @@ jsPsych.plugins["image-button-response"] = (function() {
       }
     }
     html +='"></img>';
+
+    html += "</div>";
 
     //show prompt if there is one
     if (trial.prompt !== null) {
@@ -137,7 +167,7 @@ jsPsych.plugins["image-button-response"] = (function() {
       var str = buttons[i].replace(/%choice%/g, trial.choices[i]);
       html += '<div class="jspsych-image-button-response-button" style="display: inline-block; margin:'+trial.margin_vertical+' '+trial.margin_horizontal+'" id="jspsych-image-button-response-button-' + i +'" data-choice="'+i+'">'+str+'</div>';
     }
-    html += '</div>';
+    html += '</div>';   
 
     display_element.innerHTML = html;
 
@@ -168,7 +198,7 @@ jsPsych.plugins["image-button-response"] = (function() {
 
       // after a valid response, the stimulus will have the CSS class 'responded'
       // which can be used to provide visual feedback that a response was recorded
-      display_element.querySelector('#jspsych-image-button-response-stimulus').className += ' responded';
+      display_element.querySelector('#jspsych-image-bkg-button-response-stimulus').className += ' responded';
 
       // disable all the buttons after a response
       var btns = document.querySelectorAll('.jspsych-image-button-response-button button');
@@ -207,7 +237,7 @@ jsPsych.plugins["image-button-response"] = (function() {
     // hide image if timing is set
     if (trial.stimulus_duration !== null) {
       jsPsych.pluginAPI.setTimeout(function() {
-        display_element.querySelector('#jspsych-image-button-response-stimulus').style.visibility = 'hidden';
+        display_element.querySelector('#jspsych-image-bkg-button-response-stimulus').style.visibility = 'hidden';
       }, trial.stimulus_duration);
     }
 

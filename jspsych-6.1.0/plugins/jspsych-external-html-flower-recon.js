@@ -6,12 +6,12 @@ the plugin will wait of a specified time before it proceeds.
 documentation: docs.jspsych.org
 */
 
-jsPsych.plugins['external-html'] = (function() {
+jsPsych.plugins['external-html-flower-recon'] = (function() {
 
   var plugin = {};
 
   plugin.info = {
-    name: 'external-html',
+    name: 'external-html-flower-recon',
     description: '',
     parameters: {
       url: {
@@ -19,6 +19,19 @@ jsPsych.plugins['external-html'] = (function() {
         pretty_name: 'URL',
         default: undefined,
         description: 'The url of the external html page'
+      },
+      choices: {
+        type: jsPsych.plugins.parameterType.KEYCODE,
+        array: true,
+        pretty_name: 'Choices',
+        default: jsPsych.ALL_KEYS,
+        description: 'The keys the subject is allowed to press to respond to the stimulus.'
+      },
+      background: {
+        type: jsPsych.plugins.parameterType.IMAGE,
+        pretty_name: 'Background',
+        default: undefined,
+        description: 'The background image to be displayed'
       },
       cont_key: {
         type: jsPsych.plugins.parameterType.KEYCODE,
@@ -69,7 +82,9 @@ jsPsych.plugins['external-html'] = (function() {
         if (trial.cont_key) { display_element.removeEventListener('keydown', key_listener); }
         var trial_data = {
           rt: performance.now() - t0,
-          url: trial.url
+          url: trial.url,
+          color: display_element.getElementsByTagName("input")[0].value,
+          shape: display_element.getElementsByTagName("input")[1].value
         };
         display_element.innerHTML = '';
         jsPsych.finishTrial(trial_data);
@@ -84,10 +99,15 @@ jsPsych.plugins['external-html'] = (function() {
         relocatedScript.type = scriptElement.type;
         if (scriptElement.hasAttribute("src")){
             relocatedScript.src = scriptElement.src;
+        } 
+        if (scriptElement.hasAttribute("canvas")) {
+            relocatedScript.setAttribute("canvas", "myCanvas");
         }    
         scriptElement.parentNode.replaceChild(relocatedScript, scriptElement);
         };
       }
+
+      display_element.getElementsByTagName("img")[0].setAttribute("src", trial.background);
 
       if (trial.cont_btn) { display_element.querySelector('#'+trial.cont_btn).addEventListener('click', finish); }
       if (trial.cont_key) {

@@ -6,12 +6,12 @@ the plugin will wait of a specified time before it proceeds.
 documentation: docs.jspsych.org
 */
 
-jsPsych.plugins['external-html'] = (function() {
+jsPsych.plugins['external-html-keyboard-response'] = (function() {
 
   var plugin = {};
 
   plugin.info = {
-    name: 'external-html',
+    name: 'external-html-keyboard-response',
     description: '',
     parameters: {
       url: {
@@ -19,6 +19,19 @@ jsPsych.plugins['external-html'] = (function() {
         pretty_name: 'URL',
         default: undefined,
         description: 'The url of the external html page'
+      },
+      prompt: {
+        type: jsPsych.plugins.parameterType.STRING,
+        pretty_name: 'Prompt',
+        default: null,
+        description: 'Any content here will be displayed below the stimulus.'
+      },
+      choices: {
+        type: jsPsych.plugins.parameterType.KEYCODE,
+        array: true,
+        pretty_name: 'Choices',
+        default: jsPsych.ALL_KEYS,
+        description: 'The keys the subject is allowed to press to respond to the stimulus.'
       },
       cont_key: {
         type: jsPsych.plugins.parameterType.KEYCODE,
@@ -84,9 +97,17 @@ jsPsych.plugins['external-html'] = (function() {
         relocatedScript.type = scriptElement.type;
         if (scriptElement.hasAttribute("src")){
             relocatedScript.src = scriptElement.src;
+        } 
+        if (scriptElement.hasAttribute("canvas")) {
+            relocatedScript.setAttribute("canvas", "myCanvas");
         }    
         scriptElement.parentNode.replaceChild(relocatedScript, scriptElement);
         };
+      }
+
+      // add prompt
+      if (trial.prompt !== null){
+        display_element.innerHTML += trial.prompt;
       }
 
       if (trial.cont_btn) { display_element.querySelector('#'+trial.cont_btn).addEventListener('click', finish); }
