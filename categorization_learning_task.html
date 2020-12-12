@@ -551,6 +551,7 @@
         background: jsPsych.timelineVariable('background'),
         execute_script: true,
         cont_btn: "next",
+        trial_duration: 15000,
         on_finish: function(data){
             if(data.color > 180) {
                 data.correct = true;
@@ -589,7 +590,7 @@
     // thank you
     var end_trial = {
         type: 'html-keyboard-response',
-        stimulus: '<p style="font-size:300%;">Thank you for your participation!</p><img src="'+pos_feedback_img+'"></img>'
+        stimulus: '<p style="font-size:300%; line-height:1.0">Thank you for your participation!</p><img src="'+pos_feedback_img+'"></img>'
     }
 
     /******************************************************************************************/

@@ -64,6 +64,18 @@ jsPsych.plugins['external-html-flower-recon'] = (function() {
         pretty_name: 'Execute scripts',
         default: false,
         description: 'If true, JS scripts on the external html file will be executed.'
+      },
+      trial_duration: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'Trial duration',
+        default: null,
+        description: 'How long to show trial before it ends.'
+      },
+      response_ends_trial: {
+        type: jsPsych.plugins.parameterType.BOOL,
+        pretty_name: 'Response ends trial',
+        default: true,
+        description: 'If true, trial will end when subject makes a response.'
       }
     }
   }
@@ -115,6 +127,13 @@ jsPsych.plugins['external-html-flower-recon'] = (function() {
           if (e.which == trial.cont_key) finish();
         };
         display_element.addEventListener('keydown', key_listener);
+      }
+
+      // end trial if trial_duration is set
+      if (trial.trial_duration !== null) {
+        jsPsych.pluginAPI.setTimeout(function() {
+          finish();
+        }, trial.trial_duration);
       }
     });
   };
