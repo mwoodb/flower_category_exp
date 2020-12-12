@@ -34,7 +34,7 @@
     window.globals = {x1: 180, x2: 10, x3: 9};
     var timeline = [];
 
-    /****************** set up *************************/
+    /**************************************************** set up ****************************************************/
 
     // instructions
     var overview = 'Welcome! <br> This study involves one learning phase and two test phases.<br><br>';
@@ -268,7 +268,7 @@
         }      
     }
 
-    /****************** consent *************************/
+    /**************************************************** consent ****************************************************/
     
     // welcome
     var start_trial = {
@@ -303,7 +303,7 @@
         data: {disp_type: 'online_consent_form'}
     }
 
-    /****************** PART I - category learning *************************/
+    /**************************************** PART I - category learning ******************************************/
 
     // instructions for categorization learning task
     var cat_instruction_trial = {
@@ -380,12 +380,16 @@
             return html;
         },
         choices: jsPsych.NO_KEYS,
-        trial_duration: feedback_time
+        trial_duration: feedback_time,
+        on_finish: function(data) {
+            var curr_progress_bar_value = jsPsych.getProgressBarCompleted();
+            jsPsych.setProgressBar(curr_progress_bar_value + (1/stimuli.length));
+        }
     }
     
     // entire categorization trial set
     var categorization_trials = {
-        timeline : [fixation, stim,feedback],
+        timeline : [fixation, stim, feedback],
         timeline_variables: stimuli    
     }
 
@@ -422,14 +426,14 @@
 
     
 
-    /****************** Break *************************/
+    /**************************************************** Break **************************************************** /
     // 5 min sudoku
 
     // 1) instructions
 
     // 2) sudoku
 
-    /****************** PART II - Memory test *************************/
+    /**************************************** PART II - Old/New Memory test  *********************************************/
 
     // 1) Scene recognition
 
@@ -438,7 +442,11 @@
         type: 'instructions',
         pages: [test_instructions, rec_instructions, start_ins],
         show_clickable_nav: true,
-        show_page_number: true
+        show_page_number: true,
+        on_start: function() {
+            // set progress bar to 0 at the start of experiment
+            jsPsych.setProgressBar(0);
+        }
     };
 
     // stimuli for recognition test are old images (48 - 24 create, 24 update), lure images (48 - 24 create, 24 update), new images (24)
@@ -485,6 +493,8 @@
             } else {
                 data.correct = false;
             }
+            var curr_progress_bar_value = jsPsych.getProgressBarCompleted();
+            jsPsych.setProgressBar(curr_progress_bar_value + (1/rec_backs.length));
         }
     }
 
@@ -510,7 +520,7 @@
         trial_duration: instruction_time
     };
 
-    // 2) Stimulus reconstruction
+    /**************************************** PART II - Reconstruction Memory test  *********************************************/
 
     // only actually seen backgrounds
     var recon_backs = []
@@ -527,7 +537,11 @@
         type: 'instructions',
         pages: [test2_instructions, recon_instructions, start_ins],
         show_clickable_nav: true,
-        show_page_number: true
+        show_page_number: true,
+        on_start: function() {
+            // set progress bar to 0 at the start of experiment
+            jsPsych.setProgressBar(0);
+        }
     };
 
     // reconstruction trial
@@ -543,6 +557,8 @@
             } else {
                 data.correct = false;
             }
+            var curr_progress_bar_value = jsPsych.getProgressBarCompleted();
+            jsPsych.setProgressBar(curr_progress_bar_value + (1/num_trials));
         }
     }
 
@@ -560,7 +576,7 @@
         trial_duration: instruction_time
     };
 
-    /****************** End *************************/
+    /********************************************* End *********************************************/
 
     // debriefing
     var debrief_page = {
@@ -576,7 +592,8 @@
         stimulus: '<p style="font-size:300%;">Thank you for your participation!</p><img src="'+pos_feedback_img+'"></img>'
     }
 
-    /****************** End *************************/
+    /******************************************************************************************/
+
     timeline.push(consent_inst);
     timeline.push(consent_page);
     timeline.push(start_trial);
@@ -590,7 +607,7 @@
     timeline.push(draw_end_rec_test);
     timeline.push(timer_loop);
     timeline.push(recon_instruction_trial);
-    timeline.push(reconstruction_trials);
+    timeline.push(reconstruction_trials); 
     timeline.push(draw_end_recon_test);
 
     timeline.push(debrief_page);
@@ -599,7 +616,10 @@
     // run experiment
     jsPsych.init({
         timeline: timeline,
-        preload_images: [all_backgrounds, 'assets/img/sun.png','assets/img/cloud.png', 'assets/img/smile.png', 'assets/img/frown.png', flowers] , 
+        preload_images: [all_backgrounds, 'assets/img/sun.png','assets/img/cloud.png', 'assets/img/smile.png', 'assets/img/frown.png', flowers],
+        show_progress_bar: true,
+        auto_update_progress_bar: false,
+        message_progress_bar: '',
         on_finish: function(){jsPsych.data.displayData(); }
     })
 
