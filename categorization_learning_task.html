@@ -40,9 +40,9 @@
     var overview = 'Welcome! <br> This study involves one learning phase and two test phases.<br><br>';
     var learning_ins = 'For the learning phase, you will see images of flowers on the screen.<br><br>'+
                     'You will determine whether each flower belongs to the category <i>sun-preferring</i> or <i>shade-preferring</i> .<br>\
-                          Press "Sun" if you think the flower is sun-preferring and "Shade" if you think it is shade-preferring.<br>\
-                          Please make your responses as fast and accurately as possible.<br><br>'+
-                    'You will receive feedback after responding to an image.<br>';
+                          Press "Sun" if you think the flower is sun-preferring and "Shade" if you think it is shade-preferring.<br>'+
+                    'You will receive feedback after responding to an image.<br><br>'+
+                    'Please make your responses as fast and accurately as possible.';
     var start_ins = "<br>Once you've finished reading the instructions, please press 'Next' to start the trials.<br><br>";
     var cat_instructions = '<p style="color:black; font-size: 20px;">'+
                         '<b>Category learning session</b></br></br>'+
@@ -68,7 +68,7 @@
                         "<br><p>Please make your responses as fast and accurately as possible.</p>" +
                         "<p>Press any key to begin.</p></p>";
 
-    var recon_instructions = 'For the reconstruction task, you will see an image of a flower over a background image.</p>\
+    var recon_instructions = 'For the reconstruction task, you will see an image of a flower over a background scene.</p>\
                         <p>Using the dials at the bottom of the screen, reconstruct the colour and shape <br> of the flower seen with the background during the learning phase.</p>'+
                         '<div style="width:100%;">When you are finished, click "Next" to proceed.</p>'+
                         "Please make your responses as fast and accurately as possible.<br>";
@@ -76,7 +76,7 @@
                               The test phase will start in 90 seconds.<br>";
     var test_instructions = "The first test phase is a recognition task.";
     var test2_instructions = "The second test phase is a reconstruction task.";
-    var rec_instructions = 'For the recognition task, you will judge whether you have seen each image in the learning phase.<br>\
+    var rec_instructions = 'For the recognition task, you will judge whether you have seen each image during the learning phase.<br>\
                                   You will respond either "Old" or "New".<br><br>\
                                   "Old" means that you remember seeing the image previously.<br>\
                                   "New" means that you do not remember the image at all.<br><br>\
@@ -595,7 +595,7 @@
 
     /******************************************************************************************/
 
-    timeline.push(consent_inst);
+    /* timeline.push(consent_inst);
     timeline.push(consent_page);
     timeline.push(start_trial);
 
@@ -606,7 +606,7 @@
     timeline.push(rec_instruction_trial);
     timeline.push(recognition_trials);
     timeline.push(draw_end_rec_test);
-    timeline.push(timer_loop);
+    timeline.push(timer_loop);*/
     timeline.push(recon_instruction_trial);
     timeline.push(reconstruction_trials); 
     timeline.push(draw_end_recon_test);
