@@ -36,12 +36,34 @@
 
     /**************************************************** set up ****************************************************/
 
+    // general settings
+    var instruction_time = 3000;
+    var waiting_time = 3;
+    var count_down = waiting_time;
+    var num_trials = 5;                        
+
+    // category learning task
+    var fixation_time = 1000;
+    var stim_time = 3500;
+    var bkg_time = 500;
+    var feedback_time = 1000;
+    var stim_question = "Is this <i>sun-preferring</i> or <i>shade-preferring</i>?";
+    var pos_feedback_img = 'assets/img/smile.png';
+    var pos_feedback_aud = 'assets/audio/positive.wav';
+    var neg_feedback_img = 'assets/img/frown.png';
+    var neg_feedback_aud = 'assets/audio/negative.wav';
+
+    // old/new recognition task
+    var rec_time = 1500;
+    var rec_iti = 1000;
+    var rec_question = "Is this image old or new?";
+
     // instructions
-    var overview = 'Welcome! <br> This study involves one learning phase and two test phases.<br><br>';
-    var learning_ins = 'For the learning phase, you will see images of flowers on the screen.<br><br>'+
-                    'You will determine whether each flower belongs to the category <i>sun-preferring</i> or <i>shade-preferring</i> .<br>\
-                          Press "Sun" if you think the flower is sun-preferring and "Shade" if you think it is shade-preferring.<br>'+
-                    'You will receive feedback after responding to an image.<br><br>'+
+    var overview = 'Welcome! <br> Your task is to sort flowers into groups, followed by a memory test on what you saw.<br><br>';
+    var learning_ins = 'In each trial, you will see a flower for '+stim_time/1000+' seconds, shown on top of a decorative mat.<br><br>'+
+                    'You will be asked if that flower prefers <i>sun</i> or <i>shade</i> .<br>\
+                          Press "Sun" if you think the flower is sun-preferring<br> Press "Shade" if you think it is shade-preferring.<br>'+
+                    'You will receive feedback after responding to an image and learn through trial and error.<br><br>'+
                     'Please make your responses as fast and accurately as possible.';
     var start_ins = "<br>Once you've finished reading the instructions, please press 'Next' to start the trials.<br><br>";
     var cat_instructions = '<p style="color:black; font-size: 20px;">'+
@@ -86,27 +108,6 @@
     var recon_test_complete = "You have completed the reconstruction test phase.<br>\
                             Please proceed to the debreifing.<br>";
 
-    // general settings
-    var instruction_time = 3000;
-    var waiting_time = 3;
-    var count_down = waiting_time;
-    var num_trials = 5;                        
-
-    // category learning task
-    var fixation_time = 1000;
-    var stim_time = 3500;
-    var bkg_time = 500;
-    var feedback_time = 1000;
-    var stim_question = "Is this <i>sun-preferring</i> or <i>shade-preferring</i>?";
-    var pos_feedback_img = 'assets/img/smile.png';
-    var pos_feedback_aud = 'assets/audio/positive.wav';
-    var neg_feedback_img = 'assets/img/frown.png';
-    var neg_feedback_aud = 'assets/audio/negative.wav';
-
-    // old/new recognition task
-    var rec_time = 1500;
-    var rec_iti = 1000;
-    var rec_question = "Is this image old or new?";
 
     // reconstruction task
 
@@ -595,7 +596,7 @@
 
     /******************************************************************************************/
 
-    /* timeline.push(consent_inst);
+    timeline.push(consent_inst);
     timeline.push(consent_page);
     timeline.push(start_trial);
 
@@ -606,7 +607,7 @@
     timeline.push(rec_instruction_trial);
     timeline.push(recognition_trials);
     timeline.push(draw_end_rec_test);
-    timeline.push(timer_loop);*/
+    timeline.push(timer_loop);
     timeline.push(recon_instruction_trial);
     timeline.push(reconstruction_trials); 
     timeline.push(draw_end_recon_test);
