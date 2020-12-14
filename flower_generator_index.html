@@ -52,13 +52,13 @@
             globals.x2 = 10;
             document.getElementById("x1").value = "180";
             document.getElementById('x2').value = "180";
-            globals.drawFlower1(globals.x1,globals.deg2shape(globals.x2),globals.x3);
+            globals.drawFlower1(globals.x1,globals.x2,globals.x3);
         }
 
         window.onload = function(){
             update_flower();
-            var [file_header, file_data] = globals.flower_set(0);
-            globals.export_csv(file_header, file_data, ',', 'order');
+            //var [file_header, file_data] = globals.flower_set(0);
+            //globals.export_csv(file_header, file_data, ',', 'order');
         }
     </script>
 </body>

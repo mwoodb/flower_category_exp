@@ -58,58 +58,81 @@
     var rec_iti = 1000;
     var rec_question = "Is this image old or new?";
 
-    // instructions
-    var overview = 'Welcome! <br> Your task is to sort flowers into groups, followed by a memory test on what you saw.<br><br>';
-    var learning_ins = 'In each trial, you will see a flower for '+stim_time/1000+' seconds, shown on top of a decorative mat.<br><br>'+
-                    'You will be asked if that flower prefers <i>sun</i> or <i>shade</i> .<br>\
-                          Press "Sun" if you think the flower is sun-preferring<br> Press "Shade" if you think it is shade-preferring.<br>'+
-                    'You will receive feedback after responding to an image and learn through trial and error.<br><br>'+
-                    'Please make your responses as fast and accurately as possible.';
-    var start_ins = "<br>Once you've finished reading the instructions, please press 'Next' to start the trials.<br><br>";
-    var cat_instructions = '<p style="color:black; font-size: 20px;">'+
-                        '<b>Category learning session</b></br></br>'+
-                        '<p>In this session, you will see an image of a flower at the center of the screen.</p>\
-                        <p>Determine whether the flower is <i>sun-preferring</i> or <i>shade-preferring</i>.</p>'+
-                        "<div>"+
-                            '<div style="float: left;">\
-                                <img src="assets/img/sun.png" width="200"></img>' +
-                                "<p class ='small'>Press <i>sun</i></p>"+
-                            "</div>" +
-                            "<div class='float: right;'>\
-                                <img src='assets/img/cloud.png' width='200'></img>" +
-                                "<p class ='small'>Press <i>shade</i></p>"+
-                            "</div>" +
-                        "</div></br>"+
-                        "<p>Please make your responses as fast and accurately as possible.</p>"+
-                        "<p>Press any key to begin.</p></p>";
-   
-    var rec_instructions = '<p style="color:black; font-size: 20px;">'+
-                        '<b>Scene recognition session</b></br></br>'+
-                        '<p>In this session, you will see an image of a scene at the center of the screen.</p>\
-                        <p>Press <button style="width:8%;">Old</button> if you remember the scene from the <br> flower categorization task, press <button style="width:8%;">New</button> if you do not.</p>'+
-                        "<br><p>Please make your responses as fast and accurately as possible.</p>" +
-                        "<p>Press any key to begin.</p></p>";
-
-    var recon_instructions = 'For the reconstruction task, you will see an image of a flower over a background scene.</p>\
-                        <p>Using the dials at the bottom of the screen, reconstruct the colour and shape <br> of the flower seen with the background during the learning phase.</p>'+
-                        '<div style="width:100%;">When you are finished, click "Next" to proceed.</p>'+
-                        "Please make your responses as fast and accurately as possible.<br>";
-    var learning_complete = "You have completed the learning phase.<br>\
-                              The test phase will start in 90 seconds.<br>";
-    var test_instructions = "The first test phase is a recognition task.";
-    var test2_instructions = "The second test phase is a reconstruction task.";
-    var rec_instructions = 'For the recognition task, you will judge whether you have seen each image during the learning phase.<br>\
-                                  You will respond either "Old" or "New".<br><br>\
-                                  "Old" means that you remember seeing the image previously.<br>\
-                                  "New" means that you do not remember the image at all.<br><br>\
-                                  Please make your responses as fast and accurately as possible.<br><br>';        
-    var rec_test_complete = "You have completed the recognition test phase.<br>\
-                          The second test phase will start in 90 seconds.<br>";
-    var recon_test_complete = "You have completed the reconstruction test phase.<br>\
-                            Please proceed to the debreifing.<br>";
-
-
     // reconstruction task
+    var recon_time = 15000;
+
+    // instructions
+    var overview = 'Welcome! <br> Your task is to sort flowers into groups and then complete memory tests on what you saw.<br><br>';
+    
+    var learning_ins = 'For the first part of the experiment, you will sort flowers into groups.\
+                    <br><br>In each trial, you will see a flower on top of a decorative mat for '+stim_time/1000+' seconds.<br><br>'+
+                    'You will be asked if that flower prefers <i>sun</i> or <i>shade</i> .<br><br>'+
+                    "<div style='display:flex; align-items:center; margin: 0% 30% 0% 30%;'>"+
+                            '<div style="float:left; width:20%; vertical-align: middle;">\
+                                <img src="assets/img/sun.png" style="width:110%; vertical-align: middle;"></img>' +        
+                            "</div>" +
+                            '<div style="float:left; width:20%; vertical-align: middle;">\
+                                <p style="font-size:300%">&#8592;</p>'+
+                            "</div>" +
+                            '<div style="float:left; width:20%; vertical-align: middle;">\
+                                <img src="assets/img/flower_icon.png" style="width:100%; vertical-align: middle;"></img>' +
+                            "</div>" +
+                            '<div style="float:left; width:20%; vertical-align: middle;">\
+                                <p style="font-size:300%">&#8594;</p>'+
+                            "</div>" +
+                            "<div style='float:left; width:20%; vertical-align: middle;'>\
+                                <img src='assets/img/cloud.png' style='width:110%; vertical-align: middle;''></img>" +
+                            "</div>"+
+                    "</div>" +
+                    '<br><div style="text-align: center; clear: both"> Press "&#8592;" if you think the flower prefers <i>sun</i>.<br> Press "&#8594;"" if you think the flower prefers <i>shade</i>.<br>'+
+                    '<br>The decorative mat will remain for '+bkg_time/1000+' seconds after the flower disappears<br>and is not relevant to the category decision.<br>'+
+                    'You will have until the mat disappears ('+(bkg_time+stim_time)/1000+' seconds total) to make your choice.<br>'+
+                    '<br>You will receive feedback after responding to an image.<br>At the beginning of the task, you will be mostly guessing. That is ok, make your best guess and use the feedback to learn.<br><br>'+
+                    'Please make your responses as quickly and accurately as possible.</div>';
+
+    var start_ins = '<br>Once you have finished reading the instructions, <br>please place your fingers on the "&#8592;" and "&#8594;" keys.<br><br> Press "&#8594;"" to begin.<br><br>';
+   
+    var learning_complete = "You have completed category learning.<br><br>\
+                              The first memory test will start in 90 seconds.<br>";
+
+    var test_instructions = "The next part of this experiment is a memory test for <br>the decorative mats you saw behind the flowers.<br><br>";                          
+
+    var rec_instructions = 'In each trial, you will judge whether you saw the image as a decorative mat while sorting the flowers.<br>'+
+                            "<div style='display:flex; align-items:center; margin: 0% 20% 0% 20%;'>"+
+                            '<div style="float:left; width:33%; vertical-align: middle;">\
+                                <p style="font-size:200%">Old &#8592;</p>'+
+                            "</div>" +
+                            '<div style="float:left; width:33%; vertical-align: middle;">\
+                                <img src="assets/img/image_icon.jpg" style="width:100%; vertical-align: middle;"></img>' +
+                            "</div>" +
+                            '<div style="float:left; width:33%; vertical-align: middle;">\
+                                <p style="font-size:200%">&#8594; New</p>'+
+                            "</div>"+
+                            "</div>" +
+                            '<div style="text-align: center; clear: both"> If you have seen the exact same picture before in this experiment, press "&#8592;".<br>\
+                            If you have not seen this exact picture, press "&#8594;"".<br><br>\
+                            You will have '+rec_time/1000+' seconds to respond.<br><br>\
+                            Please make your responses as quickly and accurately as possible.<br><br></div>'; 
+
+    var test2_instructions = "For the final part of this experiment, <br>we are going to test your memory for the <i>flower</i> you saw with each decorative mat.<br><br>";    
+
+    var recon_instructions = 'In each trial, you will see an image of a blank flower you have not seen before<br> over a decorative mat you have seen.</p>\
+                        Think back to the specific colour and shape of the flower you saw with this mat during learning.<br>\
+                        Using the dials at the bottom of the screen, do your best to recreate the colour and shape of the flower you saw as closely as possible.<br><br>'+
+                        '<img src="assets/img/recon_dials.png" style="width:50%; vertical-align: middle;"></img>'+
+                        '<p>When you are finished, click "Next" to save your answer and proceed to the next trial.</p>'+
+                        'You will have a maximum of '+recon_time/1000+' seconds to respond.<br>'+
+                        'If after a few seconds you cannot remember the flower, make your best guess.<br><br>'+
+                        "Please make your responses as precise as possible.<br><br>";
+
+    var recon_start_ins = '<br>Once you have finished reading the instructions, please press "Next" to begin.<br><br>';
+
+    var rec_test_complete = "You have completed the first memory test.<br><br>\
+                          The second memory test will start in 90 seconds.<br>";
+
+    var recon_test_complete = "You have completed the experiment.<br><br>\
+                            Please proceed to the debreifing.<br><br>";
+
 
     // stimuli - all backgrounds
     var all_backgrounds = [
@@ -305,12 +328,6 @@
     }
 
     /**************************************** PART I - category learning ******************************************/
-
-    // instructions for categorization learning task
-    var cat_instruction_trial = {
-        type: 'html-keyboard-response',
-        stimulus: cat_instructions
-    }  
 
     // 1) fixation cross
     var fixation = {  
@@ -536,7 +553,7 @@
     // instructions
     var recon_instruction_trial = {
         type: 'instructions',
-        pages: [test2_instructions, recon_instructions, start_ins],
+        pages: [test2_instructions, recon_instructions, recon_start_ins],
         show_clickable_nav: true,
         show_page_number: true,
         on_start: function() {
@@ -552,7 +569,7 @@
         background: jsPsych.timelineVariable('background'),
         execute_script: true,
         cont_btn: "next",
-        trial_duration: 15000,
+        trial_duration: recon_time,
         on_finish: function(data){
             if(data.color > 180) {
                 data.correct = true;
@@ -595,7 +612,7 @@
     }
 
     /******************************************************************************************/
-
+ 
     timeline.push(consent_inst);
     timeline.push(consent_page);
     timeline.push(start_trial);
@@ -608,6 +625,7 @@
     timeline.push(recognition_trials);
     timeline.push(draw_end_rec_test);
     timeline.push(timer_loop);
+
     timeline.push(recon_instruction_trial);
     timeline.push(reconstruction_trials); 
     timeline.push(draw_end_recon_test);
