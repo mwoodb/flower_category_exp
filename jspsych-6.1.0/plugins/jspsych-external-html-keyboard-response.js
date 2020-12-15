@@ -64,7 +64,7 @@ jsPsych.plugins['external-html-keyboard-response'] = (function() {
         pretty_name: 'Execute scripts',
         default: false,
         description: 'If true, JS scripts on the external html file will be executed.'
-      }
+      },
     }
   }
 

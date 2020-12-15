@@ -76,6 +76,12 @@ jsPsych.plugins['external-html-flower-recon'] = (function() {
         pretty_name: 'Response ends trial',
         default: true,
         description: 'If true, trial will end when subject makes a response.'
+      },
+      count_down: {
+        type: jsPsych.plugins.parameterType.STRING,
+        pretty_name: 'Countdown string',
+        default: null,
+        description: 'Time left countdown.'
       }
     }
   }
@@ -119,7 +125,11 @@ jsPsych.plugins['external-html-flower-recon'] = (function() {
         };
       }
 
+      // change background image
       display_element.getElementsByTagName("img")[0].setAttribute("src", trial.background);
+      
+      // add countdown
+      display_element.getElementsByTagName("div")[0].innerHTML = trial.count_down;
 
       if (trial.cont_btn) { display_element.querySelector('#'+trial.cont_btn).addEventListener('click', finish); }
       if (trial.cont_key) {

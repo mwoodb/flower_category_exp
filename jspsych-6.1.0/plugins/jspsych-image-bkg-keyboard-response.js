@@ -13,7 +13,8 @@ jsPsych.plugins["image-bkg-keyboard-response"] = (function() {
     var plugin = {};
   
     jsPsych.pluginAPI.registerPreload('image-bkg-keyboard-response', 'stimulus', 'image');
-  
+    jsPsych.pluginAPI.registerPreload('image-bkg-button-response', 'background', 'image');
+
     plugin.info = {
       name: 'image-bkg-keyboard-response',
       description: '',
@@ -67,6 +68,12 @@ jsPsych.plugins["image-bkg-keyboard-response"] = (function() {
           default: jsPsych.ALL_KEYS,
           description: 'The keys the subject is allowed to press to respond to the stimulus.'
         },
+        options: {
+          type: jsPsych.plugins.parameterType.STRING,
+          pretty_name: 'Stimulus',
+          default: undefined,
+          description: 'Choices to be displayed on either side of the stimulus'
+        },
         prompt: {
           type: jsPsych.plugins.parameterType.STRING,
           pretty_name: 'Prompt',
@@ -96,8 +103,13 @@ jsPsych.plugins["image-bkg-keyboard-response"] = (function() {
   
     plugin.trial = function(display_element, trial) {
   
+      var html = '<div style="display:flex; align-items:center; margin: 0% 0% 0% 0%;">\
+                    <div style="float:left; width:6.25%; vertical-align: middle;">\
+                      <img src="assets/img/sun.png" style="width:110%; vertical-align: middle;"></img></div>\
+                    <div style="float:left; width:6.25%; vertical-align: middle;">\
+                      <p style="font-size:300%">&#8592;</p></div>';
       
-      var html = '<div id="jspych-image-bkg-keyboard-response-container">'
+      html += '<div id="jspych-image-bkg-keyboard-response-container" style="float:left; width:75%; vertical-align: middle;">'
   
       // add background
       html += '<img src="'+trial.background+'" id="jspsych-image-bkg-keyboard-response-background" style="'
@@ -115,8 +127,6 @@ jsPsych.plugins["image-bkg-keyboard-response"] = (function() {
       } 
 
       html += '"></img>';
-
-      html += '<p style="background-color:lightgray; position: absolute; top: 30%; left: 37.5%; max-width: 30%; max-height: 30%; margin: auto;"></p>';
 
       // display stimulus
       html += '<img src="'+trial.stimulus+'" id="jspych-image-bkg-keyboard-response-stimulus" style="';
@@ -145,6 +155,14 @@ jsPsych.plugins["image-bkg-keyboard-response"] = (function() {
         html +='"></img>';
 
       html += "</div>";
+
+      html += '<div style="float:left; width:6.25%; vertical-align: middle;">\
+                  <p style="font-size:300%">&#8594;</p>\
+              </div>\
+              <div style="float:left; width:6.25%; vertical-align: middle;">\
+                  <img src="assets/img/cloud.png" style="width:110%; vertical-align: middle;"></img>\
+              </div>\
+            </div>';
 
       // add prompt
       if (trial.prompt !== null){

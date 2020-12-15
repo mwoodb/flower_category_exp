@@ -123,8 +123,6 @@ jsPsych.plugins["image-bkg-button-response"] = (function() {
 
     html += '"></img>';
 
-    //html += '<p style="background-color:lightgray; position: absolute; top: 30%; left: 37.5%; max-width: 30%; max-height: 30%; margin: auto;"></p>';
-
     // display stimulus
     html += '<img src="'+trial.stimulus+'" id="jspsych-image-bkg-button-response-stimulus" style="';
     if(trial.stimulus_height !== null){
