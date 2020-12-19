@@ -36,11 +36,14 @@
 
     /**************************************************** set up ****************************************************/
 
-    // general settings
+    // generate a random subject ID with 15 characters
+    var subject_id = jsPsych.randomization.randomID(15);
+
+    // general experiment settings
     var instruction_time = 5000;
     var waiting_time = 3;
     var count_down = waiting_time;
-    var num_trials = 5;
+    var num_trials = 8; // number of learning trials (multiple of 4)
     
     // feedback and instruction images
     var ins_img = ['assets/img/instructions/example_learning_trial.png', 'assets/img/instructions/example_recon_trial.png','assets/img/instructions/japanese_garden.jpg', 'assets/img/instructions/recon_dials.png'];
@@ -137,7 +140,7 @@
 
     var next_trial_ins = 'Start the next task<br><br>';
 
-    // stimuli - all backgrounds
+    // all background scenes (for loading)
     var all_backgrounds = [
             'assets/img/backgrounds/abbey.jpg', 'assets/img/backgrounds/abbey_2.jpg',
             'assets/img/backgrounds/airfield.jpg', 'assets/img/backgrounds/airfield_2.jpg',
@@ -245,7 +248,7 @@
             'assets/img/backgrounds/hospital_room.jpg', 'assets/img/backgrounds/hospital_room_2.jpg'
         ]
 
-    // stimuli - backgrounds in sets
+    // backgrounds in sets (for trials)
     var backgrounds = [
         [
             ['abbey.jpg','airfield.jpg','alcove.jpg','amphitheatre.jpg','amusement_park.jpg','apartment_building.jpg','aqueduct.jpg','arch.jpg','athletic_field.jpg','badlands.jpg','bamboo_forest.jpg','barn.jpg','baseball_field.jpg','basilica.jpg','bayou.jpg','bazaar_outdoors.jpg','beach_house.jpg','beach.jpg','beer_garden.jpg','boardwalk.jpg','boat_deck.jpg','botanical_gardens.jpg','bridge.jpg','bull_ring.jpg','archive.jpg','arena_hockey.jpg','art_studio.jpg','artist_loft.jpg','attic.jpg','auditorium.jpg','auto_factory.jpg','auto_showroom.jpg','bakery.jpg','balcony_interior.jpg','ball_pit.jpg','ballroom.jpg','banquet_hall.jpg','bar.jpg','basketball_court.jpg','bathroom_public.jpg','bay_window.jpg','beauty_salon.jpg','bedroom.jpg','berth.jpg','bistro_indoor.jpg','bistro_outdoor.jpg','boathouse.jpg','bookstore.jpg'],
@@ -258,24 +261,26 @@
     ]
     var back_copy = [[backgrounds[0][0].slice(), backgrounds[0][1].slice()], [backgrounds[1][0].slice(), backgrounds[1][1].slice()]];
 
-    // stimuli - flower sets
-    //var random_set = _.shuffle(['set0','set60', 'set120', 'set180', 'set240', 'set300']);
-    //var group_set = _.shuffle([['sun', 'sun', 'shade', 'shade'], ['shade', 'shade', 'sun', 'sun']]);
-    var random_set = ['set0','set60', 'set120', 'set180', 'set240', 'set300'];
-    var set_folder = random_set[0];
+    // choose flower set (48 flower images)  
+    var flower_sets = ['set0','set60', 'set120', 'set180', 'set240', 'set300'];
+    var set_folder = flower_sets[0];
+    //var set_folder = jsPsych.randomization.sampleWithoutReplacement(['set0','set60', 'set120', 'set180', 'set240', 'set300'], 1)[0];
+    //alert(set_folder)
+
     var categories = ['B','A','A','B','B','A','A','B','A','B','A','B','A','A','B','B','A','A','B','B','B','A','A','B','B','A','B','A','A','B','A','B','A','A','B','B','B','A','A','B','B','A','B','A','A','B','B','A'];
-    var group_set = [0, 1]; 
-    var gp = group_set[0]; // 0: 'A'='sun', 1:'B'='sun'
+    var group_condition = jsPsych.randomization.sampleWithoutReplacement([0, 1], 1)[0]; // 0: 'A'='sun', 1:'B'='sun'
+    
+    // choose background image set (48 originals, 48 lures) - 2 options
     var backgrounds_folder = 'backgrounds'
-    var background_set = 1; // chosen set of original and lure backgrounds
-    var lure = 1; // which list of background set is lures (vs. original)
+    var background_set = jsPsych.randomization.sampleWithoutReplacement([0, 1], 1)[0]; 
+    var lure = jsPsych.randomization.sampleWithoutReplacement([0, 1], 1)[0]; //which list within the set is the lures 
     
     // category learning stimuli (flower, sun/shade, background, lure)
     var stimuli = []; 
     var flowers = [];       
     for (i = 0; i < num_trials; i+=4) {
         for (x=0;x<4;x++) {
-            if ((categories[i+x]=='A' && gp==0) || (categories[i+x]=='B' && gp==1)){
+            if ((categories[i+x]=='A' && group_condition==0) || (categories[i+x]=='B' && group_condition==1)){
                 var g = 'sun';
             } else {
                 var g = 'shade';
@@ -284,7 +289,7 @@
             stimuli.push(
                 {
                     stimulus: 'assets/img/flowers/'+set_folder+'/flower'+(i+x+1).toString() +'.png',
-                    category: categories[i],
+                    category: categories[i+x],
                     group: g,
                     create: (x==0),
                     background: 'assets/img/'+backgrounds_folder+'/'+back_copy[background_set][1-lure].splice(randomIndex, 1)[0],
@@ -294,6 +299,15 @@
             flowers.push('assets/img/flowers/'+set_folder+'/flower'+(i+x+1).toString() +'.png');
         }      
     }
+
+    // set general jspsych data
+    jsPsych.data.addProperties({
+        subject: subject_id,
+        flower_set: set_folder,
+        group_condition: group_condition,
+        background_set: background_set,
+        lure_condition: lure
+    });
 
     /**************************************************** consent ****************************************************/
     
@@ -360,7 +374,10 @@
         options: ['Sun', 'Shade'],
         option_img: category_img,
         data: {
-            stimulus_type: jsPsych.timelineVariable('group')
+            stimulus_type: jsPsych.timelineVariable('group'),
+            category: jsPsych.timelineVariable('category'),
+            create: jsPsych.timelineVariable('create'),
+            lure: jsPsych.timelineVariable('lure')
         },
         on_finish: function(data){
             if( ( (data.key_press == 39) && (data.stimulus_type == 'shade') )
@@ -479,24 +496,25 @@
 
     // stimuli for recognition test are old images (48 - 24 create, 24 update), lure images (48 - 24 create, 24 update), new images (24)
     var rec_backs = []
+    var novel_backs = jsPsych.randomization.sampleWithoutReplacement(backgrounds[1-background_set][1-lure], num_trials/2);
     for (i=0;i<num_trials; i++) {
        rec_backs.push({
-           background: 'assets/img/'+backgrounds_folder+'/'+backgrounds[background_set][1-lure][i],
+           background: stimuli[i].background,
            lure: 0,
-           create: 0
+           create: stimuli[i].create,
         });
        rec_backs.push({
-           background: 'assets/img/'+backgrounds_folder+'/'+backgrounds[background_set][lure][i],
+           background: stimuli[i].lure,
            lure: 1,
-           create: 0
+           create: stimuli[i].create,
        });
-    }
-    for (i=0; i<(num_trials/2); i++) {
-        rec_backs.push({
-            background: 'assets/img/'+backgrounds_folder+'/'+backgrounds[1-background_set][1-lure][i],
-            lure: -1,
-            create: 0
-        });
+       if (i<(num_trials/2)) {
+            rec_backs.push({
+                background: 'assets/img/'+backgrounds_folder+'/'+novel_backs[i],
+                lure: -1,
+                create: 0
+            });
+       }
     }
 
     // a) old/new recognition trial
@@ -512,13 +530,13 @@
         data: {
             background: jsPsych.timelineVariable('background'),
             create_trial: jsPsych.timelineVariable('create'),
-            stimulus_type: jsPsych.timelineVariable('lure')
+            lure: jsPsych.timelineVariable('lure')
         },
         on_finish: function(data){
             // "old" and actually old (0), "new" and lure (1) or new (-1)
-            if( ( (data.key_press == 37) && (data.stimulus_type == 0) )
-                || ( (data.button_pressed == 39) && (data.stimulus_type == 1) ) 
-                || ( (data.button_pressed == 39) && (data.stimulus_type == -1) )){
+            if( ( (data.key_press == 37) && (data.lure== 0) )
+                || ( (data.button_pressed == 39) && (data.lure == 1) ) 
+                || ( (data.button_pressed == 39) && (data.lure == -1) )){
                 data.correct = true;
             } else {
                 data.correct = false;
@@ -552,16 +570,6 @@
 
     /**************************************** PART II - Reconstruction Memory test  *********************************************/
 
-    // only actually seen backgrounds
-    var recon_backs = []
-    for (i=0;i<num_trials; i++) {
-       recon_backs.push({
-           background: 'assets/img/'+backgrounds_folder+'/'+backgrounds[background_set][1-lure][i],
-           lure: 0,
-           create: 0
-        });
-    }
-
     // instructions
     var recon_instruction_trial = {
         type: 'instructions',
@@ -578,20 +586,22 @@
     var recon_trial = {
         type: 'external-html-flower-recon',
         url: 'flower_generator_index.html',
-        background: jsPsych.timelineVariable('background'),
+        background: jsPsych.timelineVariable('background'), // only actually seen backgrounds
         //background: 'assets/img/instructions/japanese_garden.jpg',
         execute_script: true,
         cont_btn: "next",
         count_down: function(){
-          return recon_count_down.toString();
+            while (recon_count_down > 0) {
+                return (recon_count_down-1).toString();
+            }
         },
         trial_duration: recon_time,
+        data: {
+            background: jsPsych.timelineVariable('background'),
+            create_trial: jsPsych.timelineVariable('create'),
+            stimulus: jsPsych.timelineVariable('stimulus')
+        },
         on_finish: function(data){
-            if(data.color > 180) {
-                data.correct = true;
-            } else {
-                data.correct = false;
-            }
             var curr_progress_bar_value = jsPsych.getProgressBarCompleted();
             jsPsych.setProgressBar(curr_progress_bar_value + (1/num_trials));
         }
@@ -611,7 +621,7 @@
 
     var reconstruction_trials = {
         timeline: [rec_fixation, recon_trial],
-        timeline_variables: recon_backs,
+        timeline_variables: stimuli,
         randomize_order: true
     }
 
@@ -637,14 +647,23 @@
     var end_trial = {
         type: 'html-keyboard-response',
         stimulus: '<p style="font-size:300%; line-height:1.0">Thank you for your participation!</p><img src="'+pos_feedback_img+'"></img>',
-        choices: jsPsych.NO_KEYS
+        choices: jsPsych.ANY_KEYS
+    }
+
+    /******************************************* save data **************************************/
+
+    function saveData(name, data){
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'write_data.php'); // 'write_data.php' is the path to the php file described above.
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({filename: name, filedata: data}));
     }
 
     /******************************************************************************************/
- 
+/*  
     timeline.push(consent_inst);
-    timeline.push(consent_page);
-    timeline.push(start_trial);
+    timeline.push(consent_page);*/
+/*     timeline.push(start_trial); 
 
     timeline.push(categorization_trials);
     timeline.push(draw_end_learning);
@@ -655,7 +674,7 @@
     timeline.push(recognition_trials);
     timeline.push(draw_end_rec_test);
     timeline.push(timer_loop);
-    timeline.push(next_trial);
+    timeline.push(next_trial); */
 
     timeline.push(recon_instruction_trial);
     timeline.push(reconstruction_trials);
@@ -671,7 +690,7 @@
         show_progress_bar: true,
         auto_update_progress_bar: false,
         message_progress_bar: '',
-        on_finish: function(){jsPsych.data.displayData(); }
+        on_finish: function(){ saveData(subject_id+"_experiment_data", jsPsych.data.get().csv()); }
     })
 
 </script>
