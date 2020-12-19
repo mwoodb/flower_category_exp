@@ -116,7 +116,7 @@
                             You will have '+rec_time/1000+' seconds to respond.<br><br>\
                             Please make your responses as quickly and accurately as possible.<br><br></div>'; 
 
-    var rec_test_complete = "Good work! You have completed the scene picture memory test.<br><br>\
+    var rec_test_complete = "Good work! You have completed the decorative mat memory test.<br><br>\
                             The computer will move on to the next task in 90 seconds.<br>";
 
     var test2_instructions = "For the final part of this experiment, <br>we are going to test your memory for the <i>flower</i> you saw with each decorative mat.<br><br>";    
@@ -133,7 +133,7 @@
     var recon_start_ins = '<br>Once you have finished reading the instructions, please press "Next" to begin.<br><br>';
   
     var recon_test_complete = "Great job! You have completed the experiment.<br><br>\
-                            Please proceed to the debreifing.<br><br>";
+                            Please proceed to the debriefing.<br><br>";
 
     var next_trial_ins = 'Start the next task<br><br>';
 
@@ -352,12 +352,13 @@
         type: 'image-bkg-keyboard-response',
         stimulus: jsPsych.timelineVariable('stimulus'),
         background: jsPsych.timelineVariable('background'),
-        choices: jsPsych.ALL_KEYS,
+        choices: [37, 39],
         prompt: '<p>'+stim_question+'</p>',
         response_ends_trial: false,
         trial_duration: stim_time+bkg_time,
         stimulus_duration: stim_time,
         options: ['Sun', 'Shade'],
+        option_img: category_img,
         data: {
             stimulus_type: jsPsych.timelineVariable('group')
         },
@@ -451,9 +452,7 @@
             return true;
             };
         }  
-    }
-
-    
+    } 
 
     /**************************************************** Break **************************************************** /
     // 5 min sudoku
@@ -502,12 +501,14 @@
 
     // a) old/new recognition trial
     var rec_background = {
-        type: 'image-button-response',
-        stimulus: jsPsych.timelineVariable('background'),
-        choices: ['Old', 'New'],
+        type: 'image-bkg-keyboard-response',
+        background: jsPsych.timelineVariable('background'),
+        stimulus:'',
+        choices: [37, 39],
         prompt: '<p>'+rec_question+'</p>',
         response_ends_trial: false,
         trial_duration: rec_time,
+        options: ['Old', 'New'],
         data: {
             background: jsPsych.timelineVariable('background'),
             create_trial: jsPsych.timelineVariable('create'),
@@ -515,9 +516,9 @@
         },
         on_finish: function(data){
             // "old" and actually old (0), "new" and lure (1) or new (-1)
-            if( ( (data.button_pressed == 1) && (data.stimulus_type == 0) )
-                || ( (data.button_pressed == 0) && (data.stimulus_type == 1) ) 
-                || ( (data.button_pressed == 0) && (data.stimulus_type == -1) )){
+            if( ( (data.key_press == 37) && (data.stimulus_type == 0) )
+                || ( (data.button_pressed == 39) && (data.stimulus_type == 1) ) 
+                || ( (data.button_pressed == 39) && (data.stimulus_type == -1) )){
                 data.correct = true;
             } else {
                 data.correct = false;
