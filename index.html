@@ -43,7 +43,7 @@
     var instruction_time = 5000;
     var waiting_time = 3;
     var count_down = waiting_time;
-    var num_trials = 8; // number of learning trials (multiple of 4)
+    var num_trials = 48; // number of learning trials (multiple of 4) - usually 48
     
     // feedback and instruction images
     var ins_img = ['assets/img/instructions/example_learning_trial.png', 'assets/img/instructions/example_recon_trial.png','assets/img/instructions/japanese_garden.jpg', 'assets/img/instructions/recon_dials.png'];
@@ -300,6 +300,55 @@
         }      
     }
 
+    // stimuli for recognition test
+    var rec_backs = []
+    var novel_backs = jsPsych.randomization.sampleWithoutReplacement(backgrounds[1-background_set][1-lure], num_trials/2);
+    for (i=0;i<num_trials; i++) {
+
+        // 48 old
+       rec_backs.push({
+           background: stimuli[i].background,
+           lure: 0,
+           create: stimuli[i].create,
+        });
+
+        // 48 lure
+       rec_backs.push({
+           background: stimuli[i].lure,
+           lure: 1,
+           create: stimuli[i].create,
+       });
+
+       // 24 new
+       if (i<(num_trials/2)) {
+            rec_backs.push({
+                background: 'assets/img/'+backgrounds_folder+'/'+novel_backs[i],
+                lure: -1,
+                create: 0
+            });
+       }
+    }
+
+    // randomize order while making sure no lures are back to back with their originals
+    var rec_backs_shuffled = jsPsych.randomization.shuffle(rec_backs);
+    for (i=0;i<rec_backs_shuffled.length; i++) {
+        if (i>0) {
+            var cur = rec_backs_shuffled[i];
+            var prev = rec_backs_shuffled[i-1];
+            if ((cur.lure==1 && prev.lure==0) ||
+                (cur.lure==0 && prev.lure==1) ) {
+
+                    // if previous and current are a matched pair (lure + orig) shuffle again
+                    if (cur.background.match('[a-z/]+')[0] ==
+                        prev.background.match('[a-z/]+')[0]) {
+                            rec_backs_shuffled = jsPsych.randomization.shuffle(rec_backs_shuffled);
+                            i = 0;
+                    }
+                }
+        }
+    }
+    rec_backs = rec_backs_shuffled;
+
     // set general jspsych data
     jsPsych.data.addProperties({
         subject: subject_id,
@@ -494,30 +543,9 @@
         }
     };
 
-    // stimuli for recognition test are old images (48 - 24 create, 24 update), lure images (48 - 24 create, 24 update), new images (24)
-    var rec_backs = []
-    var novel_backs = jsPsych.randomization.sampleWithoutReplacement(backgrounds[1-background_set][1-lure], num_trials/2);
-    for (i=0;i<num_trials; i++) {
-       rec_backs.push({
-           background: stimuli[i].background,
-           lure: 0,
-           create: stimuli[i].create,
-        });
-       rec_backs.push({
-           background: stimuli[i].lure,
-           lure: 1,
-           create: stimuli[i].create,
-       });
-       if (i<(num_trials/2)) {
-            rec_backs.push({
-                background: 'assets/img/'+backgrounds_folder+'/'+novel_backs[i],
-                lure: -1,
-                create: 0
-            });
-       }
-    }
-
     // a) old/new recognition trial
+    var prev_img = '';
+    var prev_lure = -1;
     var rec_background = {
         type: 'image-bkg-keyboard-response',
         background: jsPsych.timelineVariable('background'),
@@ -527,6 +555,7 @@
         response_ends_trial: false,
         trial_duration: rec_time,
         options: ['Old', 'New'],
+        lure: jsPsych.timelineVariable('lure'),
         data: {
             background: jsPsych.timelineVariable('background'),
             create_trial: jsPsych.timelineVariable('create'),
@@ -543,6 +572,8 @@
             }
             var curr_progress_bar_value = jsPsych.getProgressBarCompleted();
             jsPsych.setProgressBar(curr_progress_bar_value + (1/rec_backs.length));
+            prev_img = data.background;
+            prev_lure = data.lure;
         }
     }
 
@@ -556,8 +587,7 @@
 
     var recognition_trials = {
         timeline: [rec_fixation, rec_background],
-        timeline_variables: rec_backs,
-        randomize_order: true
+        timeline_variables: rec_backs
     }
 
     // draw instructions for ending recognition phase
