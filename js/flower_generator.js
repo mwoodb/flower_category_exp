@@ -206,7 +206,7 @@ function c_jump(cur_colour, lab_jump_size) {
     return new_colour;
 }
 
-// create a set of flower images (48), 2 of each colour
+// create a set of flower images (48), 2 of each colour. Takes start colour (0, 60, 120, etc.)
 function flower_set(startColour){
     
     var colour_size = 30; // degrees between colour sections
@@ -237,7 +237,7 @@ function flower_set(startColour){
             //alert(colour_centroids[c]+"f f "+new_colour);
         }
 
-        // if futher down colour wheel, take a measured jump between previous and current colour
+        // if further down colour wheel, take a measured jump between previous and current colour
         else {
 
             var new_colour = c_jump(cur_colour, lab_jump_size);
@@ -289,11 +289,23 @@ function flower_set(startColour){
         // 3 additional shades for the colour
         for (var s = 0; s<3; s++) {
             var new_colour = Math.round(Math.random()*(colour_size) + colour_centroids[c]-(colour_size/2));
-            
+
+            var prev_colour_lab = angle2Lab(shades[s]); // prev colour L*a*b*      
+            var new_colour_lab = angle2Lab(new_colour); // new colour L*a*b*
+
+            delta = deltaELab00(prev_colour_lab, new_colour_lab); // old-new 
+
+            // take less than jump size between previous and new shade
+            while (delta>=(lab_jump_size/2)) {
+                new_colour = Math.round(Math.random()*(colour_size) + colour_centroids[c]-(colour_size/2));
+                new_colour_lab = angle2Lab(new_colour);
+                delta = Math.round(deltaELab00(new_colour_lab, prev_colour_lab));
+            }
+
             if (new_colour < 0) {
                 new_colour += 360;
             }
-            
+      
             shades.push(new_colour);
             //alert(colour_centroids[c]+" shade "+new_colour);
         }
@@ -304,7 +316,7 @@ function flower_set(startColour){
         
 
     }
-    alert("colours"+colours);
+    //alert("colours"+colours);
 
     var shapes = [];
     var dev_max = 3;
@@ -316,7 +328,7 @@ function flower_set(startColour){
         var devB = (Math.random()*(dev_max-dev_min) + dev_min);
         shapes.push([(centA-devA).toFixed(1), (centA+devA).toFixed(1), (centB-devB).toFixed(1), (centB+devB).toFixed(1)]);
     }
-    alert("shapes"+shapes);
+    //alert("shapes"+shapes);
 
     //alert("hello");
     
