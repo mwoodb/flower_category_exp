@@ -12,6 +12,7 @@
     <script src="jspsych-6.1.0/plugins/jspsych-external-html-flower-recon.js"></script>
     <script src="jspsych-6.1.0/plugins/jspsych-instructions.js"></script>
     <script src="js/underscore-min.js"></script> 
+    <script src="js/category_var.js"></script>
     <script src="js/jquery.csv.js"></script>
 
     <link href="jspsych-6.1.0/css/jspsych.css" rel="stylesheet" type="text/css"></link>
@@ -267,7 +268,7 @@
     //var set_folder = jsPsych.randomization.sampleWithoutReplacement(['set0','set60', 'set120', 'set180', 'set240', 'set300'], 1)[0];
     //alert(set_folder)
 
-    var categories = ['B','A','A','B','B','A','A','B','A','B','A','B','A','A','B','B','A','A','B','B','B','A','A','B','B','A','B','A','A','B','A','B','A','A','B','B','B','A','A','B','B','A','B','A','A','B','B','A'];
+    var categories = all_categories[set_folder];
     var group_condition = jsPsych.randomization.sampleWithoutReplacement([0, 1], 1)[0]; // 0: 'A'='sun', 1:'B'='sun'
     
     // choose background image set (48 originals, 48 lures) - 2 options
