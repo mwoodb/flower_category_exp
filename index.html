@@ -691,7 +691,7 @@
     }
 
     /******************************************************************************************/
- 
+/*  
     timeline.push(consent_inst);
     timeline.push(consent_page);
     timeline.push(start_trial); 
@@ -711,7 +711,7 @@
     timeline.push(reconstruction_trials);
     timeline.push(draw_end_recon_test);
 
-    timeline.push(debrief_page);
+    timeline.push(debrief_page); */
     timeline.push(end_trial);
 
     // run experiment
@@ -721,7 +721,27 @@
         show_progress_bar: true,
         auto_update_progress_bar: false,
         message_progress_bar: '',
-        on_finish: function(){ saveData(subject_id+"_experiment_data", jsPsych.data.get().csv()); }
+        on_finish: function(){ 
+            var data = {
+                experiment: "category_learning_task",
+                repo: "mwoodb.github.io",
+                data: jsPsych.data.get().values()
+            }
+            
+            // send data to savejs
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST','https://mwoodb-savejs.netlify.app/api/savejs');
+            xhr.setRequestHeader('Content-Type','application/json');
+            xhr.onload = function(){
+                if(xhr.status==200){
+                var response=JSON.parse(xhr.responseText);
+                console.log(response.success);
+                }
+            };
+            xhr.send(JSON.stringify(data));
+            
+            //saveData(subject_id+"_experiment_data", jsPsych.data.get().csv()); 
+        }
     })
 
 </script>
