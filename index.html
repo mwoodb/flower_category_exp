@@ -350,15 +350,6 @@
     }
     rec_backs = rec_backs_shuffled;
 
-    // set general jspsych data
-    jsPsych.data.addProperties({
-        subject: subject_id,
-        flower_set: set_folder,
-        group_condition: group_condition,
-        background_set: background_set,
-        lure_condition: lure
-    });
-
     /**************************************************** consent ****************************************************/
     
     // welcome
@@ -408,7 +399,10 @@
         type: 'html-keyboard-response',
         stimulus: '+',
         choices: jsPsych.NO_KEYS,
-        trial_duration: fixation_time
+        trial_duration: fixation_time,
+        data: {
+            exp_section: 'category_learning'
+        }
     }
 
     // 2) stimulus + background
@@ -424,6 +418,7 @@
         options: ['Sun', 'Shade'],
         option_img: category_img,
         data: {
+            exp_section: 'category_learning',
             stimulus_type: jsPsych.timelineVariable('group'),
             category: jsPsych.timelineVariable('category'),
             create: jsPsych.timelineVariable('create'),
@@ -478,6 +473,9 @@
         },
         choices: jsPsych.NO_KEYS,
         trial_duration: feedback_time,
+        data: {
+            exp_section: 'category_learning'
+        },
         on_finish: function(data) {
             var curr_progress_bar_value = jsPsych.getProgressBarCompleted();
             jsPsych.setProgressBar(curr_progress_bar_value + (1/stimuli.length));
@@ -558,6 +556,7 @@
         options: ['Old', 'New'],
         lure: jsPsych.timelineVariable('lure'),
         data: {
+            exp_section: 'scene_recognition',
             background: jsPsych.timelineVariable('background'),
             create_trial: jsPsych.timelineVariable('create'),
             lure: jsPsych.timelineVariable('lure')
@@ -583,7 +582,10 @@
         type: 'html-keyboard-response',
         stimulus: '+',
         choices: jsPsych.NO_KEYS,
-        trial_duration: rec_iti
+        trial_duration: rec_iti,
+        data: {
+            exp_section: 'scene_recognition',
+        }
     }
 
     var recognition_trials = {
@@ -628,6 +630,7 @@
         },
         trial_duration: recon_time,
         data: {
+            exp_section: 'flower_reconstruction',
             background: jsPsych.timelineVariable('background'),
             create_trial: jsPsych.timelineVariable('create'),
             stimulus: jsPsych.timelineVariable('stimulus')
@@ -727,6 +730,11 @@
             var data = {
                 experiment: "category_learning_task",
                 repo: "mwoodb.github.io",
+                subject: subject_id,
+                flower_set: set_folder,
+                flower_shape_condition: group_condition,
+                background_img_set: background_set,
+                lure_img_set: lure,
                 data: jsPsych.data.get().values()
             }
             
