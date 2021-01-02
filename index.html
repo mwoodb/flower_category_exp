@@ -684,15 +684,6 @@
         choices: jsPsych.ANY_KEYS
     }
 
-    /******************************************* save data **************************************/
-
-    function saveData(name, data){
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'write_data.php'); // 'write_data.php' is the path to the php file described above.
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify({filename: name, filedata: data}));
-    }
-
     /******************************************************************************************/
  
     timeline.push(consent_inst);
@@ -724,8 +715,7 @@
         show_progress_bar: true,
         auto_update_progress_bar: false,
         message_progress_bar: '',
-        on_finish: function(){ 
-            jsPsych.data.displayData();
+        on_finish: function(){
             
             var data = {
                 experiment: "category_learning_task",
