@@ -722,6 +722,8 @@
         auto_update_progress_bar: false,
         message_progress_bar: '',
         on_finish: function(){ 
+            jsPsych.data.displayData();
+            
             var data = {
                 experiment: "category_learning_task",
                 repo: "mwoodb.github.io",
@@ -734,16 +736,16 @@
             xhr.setRequestHeader('Content-Type','application/json');
             xhr.onload = function(){
                 if(xhr.status==200){
-                var response=JSON.parse(xhr.responseText);
-                console.log("success sending data");
-                console.log(response.success);
+                    var response=JSON.parse(xhr.responseText);
+                    console.log(response.success);
+                    console.log("success sending data");
                 }
                 else {
                     console.log("failed to send data");
                 }
             };
             xhr.send(JSON.stringify(data));
-            
+            console.log(xhr.statusText)
             //saveData(subject_id+"_experiment_data", jsPsych.data.get().csv()); 
         }
     })
