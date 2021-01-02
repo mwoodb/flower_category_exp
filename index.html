@@ -691,7 +691,7 @@
     }
 
     /******************************************************************************************/
-/*  
+ 
     timeline.push(consent_inst);
     timeline.push(consent_page);
     timeline.push(start_trial); 
@@ -707,7 +707,7 @@
     timeline.push(timer_loop);
     timeline.push(next_trial);
 
-    timeline.push(recon_instruction_trial);*/
+    timeline.push(recon_instruction_trial);
     timeline.push(reconstruction_trials);
     timeline.push(draw_end_recon_test);
 
@@ -745,8 +745,6 @@
                 }
             };
             xhr.send(JSON.stringify(data));
-            console.log(xhr.statusText)
-            //saveData(subject_id+"_experiment_data", jsPsych.data.get().csv()); 
         }
     })
 
