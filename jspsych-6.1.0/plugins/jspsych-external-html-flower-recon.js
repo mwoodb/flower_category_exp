@@ -76,12 +76,6 @@ jsPsych.plugins['external-html-flower-recon'] = (function() {
         pretty_name: 'Response ends trial',
         default: true,
         description: 'If true, trial will end when subject makes a response.'
-      },
-      count_down: {
-        type: jsPsych.plugins.parameterType.STRING,
-        pretty_name: 'Countdown string',
-        default: null,
-        description: 'Time left countdown.'
       }
     }
   }
@@ -95,6 +89,7 @@ jsPsych.plugins['external-html-flower-recon'] = (function() {
 
     load(display_element, url, function() {
       var t0 = performance.now();
+      var t;
       var finish = function() {
         if (trial.check_fn && !trial.check_fn(display_element)) { return };
         if (trial.cont_key) { display_element.removeEventListener('keydown', key_listener); }
@@ -104,6 +99,7 @@ jsPsych.plugins['external-html-flower-recon'] = (function() {
           color: display_element.getElementsByTagName("input")[0].value,
           shape: display_element.getElementsByTagName("input")[1].value
         };
+        clearTimeout(t);
         display_element.innerHTML = '';
         jsPsych.finishTrial(trial_data);
       };
@@ -129,7 +125,13 @@ jsPsych.plugins['external-html-flower-recon'] = (function() {
       display_element.getElementsByTagName("img")[0].setAttribute("src", trial.background);
       
       // add countdown
-      display_element.getElementsByTagName("div")[0].innerHTML = trial.count_down;
+      var s = 0;
+      function startTime(){
+        display_element.getElementsByTagName("div")[0].innerHTML = trial.trial_duration/1000 - s;
+        s += 1;
+        t = setTimeout(function(){ startTime() }, 1000);;
+      }
+      startTime();
 
       if (trial.cont_btn) { display_element.querySelector('#'+trial.cont_btn).addEventListener('click', finish); }
       if (trial.cont_key) {

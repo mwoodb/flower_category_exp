@@ -15,6 +15,13 @@
     <script src="js/category_var.js"></script>
     <script src="js/jquery.csv.js"></script>
 
+    <script src="assets/img/flowers/set0/set0_order.js"></script>
+    <script src="assets/img/flowers/set60/set60_order.js"></script>
+    <script src="assets/img/flowers/set120/set120_order.js"></script>
+    <script src="assets/img/flowers/set180/set180_order.js"></script>
+    <script src="assets/img/flowers/set240/set240_order.js"></script>
+    <script src="assets/img/flowers/set300/set300_order.js"></script>
+
     <link href="jspsych-6.1.0/css/jspsych.css" rel="stylesheet" type="text/css"></link>
 
     <style type="text/css">
@@ -30,9 +37,8 @@
     </style>
 
 </head>
-
 <script>
-    window.globals = {x1: 180, x2: 10, x3: 9};
+    window.globals = {x1: 180, x2: 180, x3: 9};
     var timeline = [];
 
     /**************************************************** set up ****************************************************/
@@ -276,6 +282,29 @@
     var background_set = jsPsych.randomization.sampleWithoutReplacement([0, 1], 1)[0]; 
     var lure = jsPsych.randomization.sampleWithoutReplacement([0, 1], 1)[0]; //which list within the set is the lures 
     
+    switch(set_folder) {
+        case 'set0':
+            flower_info = set0_flower_info;
+            break;
+        case 'set60':
+            flower_info = set60_flower_info;
+            break;
+        case 'set120':
+            flower_info = set120_flower_info;
+            break;
+        case 'set180':
+            flower_info = set180_flower_info;
+            break;
+        case 'set240':  
+            flower_info = set240_flower_info;
+            break;
+        case 'set300':
+            flower_info = set300_flower_info;
+            break;  
+        default:
+
+    }
+
     // category learning stimuli (flower, sun/shade, background, lure)
     var stimuli = []; 
     var flowers = [];       
@@ -290,9 +319,23 @@
             stimuli.push(
                 {
                     stimulus: 'assets/img/flowers/'+set_folder+'/flower'+(i+x+1).toString() +'.png',
+                    shape: flower_info[i+x]["shape"],
+                    colour: flower_info[i+x]["shade"],
                     category: categories[i+x],
                     group: g,
-                    create: (x==0),
+                    create: function() { 
+
+                        // create if first of colour set or first of shape
+                        if (x==0) {
+                            return 1;
+                        }
+                        for (idx=0; idx<x; idx++){
+                            if (categories[i+idx]==categories[i+x]) {
+                                return 0;
+                            }
+                        }
+                        return 1;
+                    },
                     background: 'assets/img/'+backgrounds_folder+'/'+back_copy[background_set][1-lure].splice(randomIndex, 1)[0],
                     lure: 'assets/img/'+backgrounds_folder+'/'+back_copy[background_set][lure].splice(randomIndex, 1)[0]
                 }
@@ -623,11 +666,6 @@
         //background: 'assets/img/instructions/japanese_garden.jpg',
         execute_script: true,
         cont_btn: "next",
-        count_down: function(){
-            while (recon_count_down > 0) {
-                return (recon_count_down-1).toString();
-            }
-        },
         trial_duration: recon_time,
         data: {
             exp_section: 'flower_reconstruction',
@@ -640,18 +678,6 @@
             jsPsych.setProgressBar(curr_progress_bar_value + (1/num_trials));
         }
     }
-
-/*     var recon_trial = {
-        loop_function: function(){
-            if (recon_count_down == 0) {
-                recon_count_down = recon_time/1000;
-                return false;
-            } else {
-                recon_count_down -= 1;
-                return true;
-            };
-        }  
-    } */
 
     var reconstruction_trials = {
         timeline: [rec_fixation, recon_trial],
