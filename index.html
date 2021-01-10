@@ -742,7 +742,8 @@
         auto_update_progress_bar: false,
         message_progress_bar: '',
         on_finish: function(){
-            
+            jsPsych.data.displayData('json');
+
             var data = {
                 experiment: "category_learning_task",
                 repo: "mwoodb.github.io",
