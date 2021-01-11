@@ -666,6 +666,12 @@
         //background: 'assets/img/instructions/japanese_garden.jpg',
         execute_script: true,
         cont_btn: "next",
+        check_fn: function(elem) {
+            if (document.getElementById('x1').getAttribute('clicked') == "false") {
+                return false;
+            }
+            return true;
+        },
         trial_duration: recon_time,
         data: {
             exp_section: 'flower_reconstruction',

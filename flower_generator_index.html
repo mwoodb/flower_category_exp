@@ -32,11 +32,11 @@
     <div style="position: relative; width:89%; left: -3%; display: inline-block;">
         <div class="slidecontainer"> 
             colour
-            <input type="range" min="1" max="360" value="180" class="slider" id="x1" style="width: 85%; text-align:center;" onchange="javascript:update_flower()">
+            <input type="range" min="1" max="360" value="180" class="slider" id="x1" style="width: 85%; text-align:center;" clicked="false" onchange="javascript:update_flower()">
         </div>
         <div class="slidecontainer"> 
             shape
-            <input type="range" min="1" max="360" value="180" class="slider" id="x2" style="width: 85%" onchange="javascript:update_flower()">
+            <input type="range" min="1" max="360" value="180" class="slider" id="x2" style="width: 85%" clicked="false" onchange="javascript:update_flower()">
         </div>
     </div>
     <div style="display: inline-block; width:30%; height: 50%;">
@@ -48,6 +48,8 @@
             globals.x1 = document.getElementById('x1').value;
             globals.x2 = globals.deg2shape(document.getElementById('x2').value);
             globals.drawFlower1(globals.x1,globals.x2,globals.x3);
+            document.getElementById('x1').setAttribute('clicked', "true");
+            document.getElementById('x2').setAttribute('clicked', "true");
         }
 
         function next() {
