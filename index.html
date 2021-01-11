@@ -50,7 +50,7 @@
     var instruction_time = 5000;
     var waiting_time = 3;
     var count_down = waiting_time;
-    var num_trials = 48; // number of learning trials (multiple of 4) - usually 48
+    var num_trials = 6; // number of learning trials (multiple of 4) - usually 48
     
     // feedback and instruction images
     var ins_img = ['assets/img/instructions/example_learning_trial.png', 'assets/img/instructions/example_recon_trial.png','assets/img/instructions/japanese_garden.jpg', 'assets/img/instructions/recon_dials.png'];
@@ -667,7 +667,8 @@
         execute_script: true,
         cont_btn: "next",
         check_fn: function(elem) {
-            if (document.getElementById('x1').getAttribute('clicked') == "false") {
+            if ((document.getElementById('x1').getAttribute('clicked') == "false") &&
+                !(document.getElementById('countdown').innerHTML == "1" )){
                 return false;
             }
             return true;
@@ -718,7 +719,7 @@
 
     /******************************************************************************************/
  
-    timeline.push(consent_inst);
+/*     timeline.push(consent_inst);
     timeline.push(consent_page);
     timeline.push(start_trial); 
 
@@ -733,7 +734,7 @@
     timeline.push(timer_loop);
     timeline.push(next_trial);
 
-    timeline.push(recon_instruction_trial);
+    timeline.push(recon_instruction_trial);*/
     timeline.push(reconstruction_trials);
     timeline.push(draw_end_recon_test);
 

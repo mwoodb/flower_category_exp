@@ -53,14 +53,14 @@
         }
 
         function next() {
-            globals.x1 = -1;
-            globals.x2 = 10;
-            document.getElementById("x1").value = "180";
-            document.getElementById('x2').value = "180";
             globals.drawFlower1(globals.x1,globals.x2,globals.x3);
         }
 
         window.onload = function(){
+            globals.x1 = -1;
+            globals.x2 = 10;
+            document.getElementById("x1").value = "180";
+            document.getElementById('x2').value = "180";
             update_flower();
             
             // dowload flower set

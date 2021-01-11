@@ -96,8 +96,9 @@ jsPsych.plugins['external-html-flower-recon'] = (function() {
         var trial_data = {
           rt: performance.now() - t0,
           url: trial.url,
-          color: display_element.getElementsByTagName("input")[0].value,
-          shape: display_element.getElementsByTagName("input")[1].value
+          colour: display_element.getElementsByTagName("input")[0].value,
+          shape: display_element.getElementsByTagName("input")[1].value,
+          responded: display_element.getElementsByTagName("input")[0].getAttribute("clicked")
         };
         clearTimeout(t);
         display_element.innerHTML = '';
