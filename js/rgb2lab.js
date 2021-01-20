@@ -291,7 +291,7 @@ function angle2Lab(angle) {
 }
 function main(){
 
-    var petalColor1 = 61;
+/*     var petalColor1 = 61;
     colour1 = angle2Lab(petalColor1);
     
     var petalColor2 = petalColor1;
@@ -307,6 +307,6 @@ function main(){
 
     colour1 = [60,79.80512402078594,5.580517899530024];
     colour2 = [60,65.53216354311934,45.886114908083684];
-    alert(deltaELab00(colour1, colour2));
+    alert(deltaELab00(colour1, colour2)); */
 }
 //main()
