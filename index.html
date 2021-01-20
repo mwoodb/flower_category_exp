@@ -47,7 +47,7 @@
     var instruction_time = 5000;
     var waiting_time = 3;
     var count_down = waiting_time;
-    var num_trials = 4; // number of learning trials (multiple of 4) - usually 48
+    var num_trials = 48; // number of learning trials (multiple of 4) - usually 48
     
     // feedback and instruction images
     var ins_img = ['assets/img/instructions/example_learning_trial.png', 'assets/img/instructions/example_recon_trial.png','assets/img/instructions/japanese_garden.jpg', 'assets/img/instructions/recon_dials.png'];
@@ -628,6 +628,7 @@
     jsPsych.init({
         timeline: timeline,
         preload_images: [backgrounds[background_set].flat(), novel_backs, category_img, feedback_img, ins_img, flowers],
+        preload_audio: neg_feedback_aud, pos_feedback_aud,
         show_progress_bar: true,
         auto_update_progress_bar: false,
         message_progress_bar: '',
