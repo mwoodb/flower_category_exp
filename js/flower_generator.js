@@ -31,7 +31,7 @@ function drawFlower1(petalColor,petalShape,circleShape) {
     new Path.Rectangle({
         center: [xoff,yoff],
         size: [width, height],
-        fillColor: new Color(1,1,1,1),
+        fillColor: new Color(0.8, 0.8, 0.8,1),
     });
 
     pcolor = petalColor;
