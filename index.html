@@ -10,6 +10,7 @@
     <script src="jspsych-6.1.0/plugins/jspsych-external-html.js"></script>
     <script src="jspsych-6.1.0/plugins/jspsych-external-html-flower-recon.js"></script>
     <script src="jspsych-6.1.0/plugins/jspsych-instructions.js"></script>
+    <script src="jspsych-6.1.0/plugins/jspsych-fullscreen.js"></script>
     <script src="js/category_var.js"></script>
 
     <script src="assets/img/flowers/set0/set0_order.js"></script>
@@ -278,6 +279,12 @@
 
     /**************************************************** consent ****************************************************/
     
+    // fullscreen
+    var fullscreen = {
+        type: 'fullscreen',
+        fullscreen_mode: true
+    };
+
     // welcome
     var start_trial = {
         type: 'instructions',
@@ -601,7 +608,7 @@
     }
 
     /******************************************************************************************/
- 
+    timeline.push(fullscreen);
     timeline.push(consent_inst);
     timeline.push(consent_page);
     timeline.push(start_trial);
@@ -628,7 +635,7 @@
     jsPsych.init({
         timeline: timeline,
         preload_images: [backgrounds[background_set].flat(), novel_backs, category_img, feedback_img, ins_img, flowers],
-        preload_audio: neg_feedback_aud, pos_feedback_aud,
+        preload_audio: [neg_feedback_aud, pos_feedback_aud],
         show_progress_bar: true,
         auto_update_progress_bar: false,
         message_progress_bar: '',
