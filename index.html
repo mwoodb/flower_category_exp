@@ -50,7 +50,7 @@
     var instruction_time = 5000;
     var waiting_time = 3;
     var count_down = waiting_time;
-    var num_trials = 6; // number of learning trials (multiple of 4) - usually 48
+    var num_trials = 48; // number of learning trials (multiple of 4) - usually 48
     
     // feedback and instruction images
     var ins_img = ['assets/img/instructions/example_learning_trial.png', 'assets/img/instructions/example_recon_trial.png','assets/img/instructions/japanese_garden.jpg', 'assets/img/instructions/recon_dials.png'];
@@ -147,130 +147,22 @@
 
     var next_trial_ins = 'Start the next task<br><br>';
 
-    // all background scenes (for loading)
-    var all_backgrounds = [
-            'assets/img/backgrounds/abbey.jpg', 'assets/img/backgrounds/abbey_2.jpg',
-            'assets/img/backgrounds/airfield.jpg', 'assets/img/backgrounds/airfield_2.jpg',
-            'assets/img/backgrounds/alcove.jpg', 'assets/img/backgrounds/alcove_2.jpg',
-            'assets/img/backgrounds/amphitheatre.jpg', 'assets/img/backgrounds/amphitheatre_2.jpg',
-            'assets/img/backgrounds/amusement_park.jpg', 'assets/img/backgrounds/amusement_park_2.jpg',
-            'assets/img/backgrounds/apartment_building.jpg', 'assets/img/backgrounds/apartment_building_2.jpg',
-            'assets/img/backgrounds/aqueduct.jpg', 'assets/img/backgrounds/aqueduct_2.jpg',
-            'assets/img/backgrounds/arch.jpg', 'assets/img/backgrounds/arch_2.jpg',
-            'assets/img/backgrounds/archive.jpg', 'assets/img/backgrounds/archive_2.jpg',
-            'assets/img/backgrounds/arena_hockey.jpg', 'assets/img/backgrounds/arena_hockey_2.jpg',
-            'assets/img/backgrounds/art_studio.jpg', 'assets/img/backgrounds/art_studio_2.jpg',
-            'assets/img/backgrounds/artist_loft.jpg', 'assets/img/backgrounds/artist_loft_2.jpg',
-            'assets/img/backgrounds/athletic_field.jpg', 'assets/img/backgrounds/athletic_field_2.jpg',
-            'assets/img/backgrounds/attic.jpg', 'assets/img/backgrounds/attic_2.jpg',
-            'assets/img/backgrounds/auditorium.jpg', 'assets/img/backgrounds/auditorium_2.jpg',
-            'assets/img/backgrounds/auto_factory.jpg', 'assets/img/backgrounds/auto_factory_2.jpg',
-            'assets/img/backgrounds/auto_showroom.jpg', 'assets/img/backgrounds/auto_showroom_2.jpg',
-            'assets/img/backgrounds/badlands.jpg', 'assets/img/backgrounds/badlands_2.jpg',
-            'assets/img/backgrounds/bakery.jpg', 'assets/img/backgrounds/bakery_2.jpg',
-            'assets/img/backgrounds/balcony_interior.jpg', 'assets/img/backgrounds/balcony_interior_2.jpg',
-            'assets/img/backgrounds/ball_pit.jpg', 'assets/img/backgrounds/ball_pit_2.jpg',
-            'assets/img/backgrounds/ballroom.jpg', 'assets/img/backgrounds/ballroom_2.jpg',
-            'assets/img/backgrounds/bamboo_forest.jpg', 'assets/img/backgrounds/bamboo_forest_2.jpg',
-            'assets/img/backgrounds/banquet_hall.jpg', 'assets/img/backgrounds/banquet_hall_2.jpg',
-            'assets/img/backgrounds/bar.jpg', 'assets/img/backgrounds/bar_2.jpg',
-            'assets/img/backgrounds/barn.jpg', 'assets/img/backgrounds/barn_2.jpg',
-            'assets/img/backgrounds/baseball_field.jpg', 'assets/img/backgrounds/baseball_field_2.jpg',
-            'assets/img/backgrounds/basilica.jpg', 'assets/img/backgrounds/basilica_2.jpg',
-            'assets/img/backgrounds/basketball_court.jpg', 'assets/img/backgrounds/basketball_court_2.jpg',
-            'assets/img/backgrounds/bathroom_public.jpg', 'assets/img/backgrounds/bathroom_public_2.jpg',
-            'assets/img/backgrounds/bay_window.jpg', 'assets/img/backgrounds/bay_window_2.jpg',
-            'assets/img/backgrounds/bayou.jpg', 'assets/img/backgrounds/bayou_2.jpg',
-            'assets/img/backgrounds/bazaar_outdoors.jpg', 'assets/img/backgrounds/bazaar_outdoors_2.jpg',
-            'assets/img/backgrounds/beach.jpg', 'assets/img/backgrounds/beach_2.jpg',
-            'assets/img/backgrounds/beach_house.jpg', 'assets/img/backgrounds/beach_house_2.jpg',
-            'assets/img/backgrounds/beauty_salon.jpg', 'assets/img/backgrounds/beauty_salon_2.jpg',
-            'assets/img/backgrounds/bedroom.jpg', 'assets/img/backgrounds/bedroom_2.jpg',
-            'assets/img/backgrounds/beer_garden.jpg', 'assets/img/backgrounds/beer_garden_2.jpg',
-            'assets/img/backgrounds/berth.jpg', 'assets/img/backgrounds/berth_2.jpg',
-            'assets/img/backgrounds/bistro_indoor.jpg', 'assets/img/backgrounds/bistro_indoor_2.jpg',
-            'assets/img/backgrounds/bistro_outdoor.jpg', 'assets/img/backgrounds/bistro_outdoor_2.jpg',
-            'assets/img/backgrounds/boardwalk.jpg', 'assets/img/backgrounds/boardwalk_2.jpg',
-            'assets/img/backgrounds/boat_deck.jpg', 'assets/img/backgrounds/boat_deck_2.jpg',
-            'assets/img/backgrounds/boathouse.jpg', 'assets/img/backgrounds/boathouse_2.jpg',
-            'assets/img/backgrounds/bookstore.jpg', 'assets/img/backgrounds/bookstore_2.jpg',
-            'assets/img/backgrounds/botanical_gardens.jpg', 'assets/img/backgrounds/botanical_gardens_2.jpg',
-            'assets/img/backgrounds/boxing_ring.jpg', 'assets/img/backgrounds/boxing_ring_2.jpg',
-            'assets/img/backgrounds/bridge.jpg', 'assets/img/backgrounds/bridge_2.jpg',
-            'assets/img/backgrounds/bull_ring.jpg', 'assets/img/backgrounds/bull_ring_2.jpg',
-            'assets/img/backgrounds/bus_interior.jpg', 'assets/img/backgrounds/bus_interior_2.jpg',
-            'assets/img/backgrounds/bus_station.jpg', 'assets/img/backgrounds/bus_station_2.jpg',
-            'assets/img/backgrounds/butte.jpg', 'assets/img/backgrounds/butte_2.jpg',
-            'assets/img/backgrounds/cabin.jpg', 'assets/img/backgrounds/cabin_2.jpg',
-            'assets/img/backgrounds/cafeteria.jpg', 'assets/img/backgrounds/cafeteria_2.jpg',
-            'assets/img/backgrounds/campus.jpg', 'assets/img/backgrounds/campus_2.jpg',
-            'assets/img/backgrounds/canal_natural.jpg', 'assets/img/backgrounds/canal_natural_2.jpg',
-            'assets/img/backgrounds/candy_store.jpg', 'assets/img/backgrounds/candy_store_2.jpg',
-            'assets/img/backgrounds/canyon.jpg', 'assets/img/backgrounds/canyon_2.jpg',
-            'assets/img/backgrounds/car_back_seat.jpg', 'assets/img/backgrounds/car_back_seat_2.jpg',
-            'assets/img/backgrounds/carrousel.jpg', 'assets/img/backgrounds/carrousel_2.jpg',
-            'assets/img/backgrounds/castle.jpg', 'assets/img/backgrounds/castle_2.jpg',
-            'assets/img/backgrounds/catacombs.jpg', 'assets/img/backgrounds/catacombs_2.jpg',
-            'assets/img/backgrounds/cathedral_indoor.jpg', 'assets/img/backgrounds/cathedral_indoor_2.jpg',
-            'assets/img/backgrounds/chalet.jpg', 'assets/img/backgrounds/chalet_2.jpg',
-            'assets/img/backgrounds/childs_room.jpg', 'assets/img/backgrounds/childs_room_2.jpg',
-            'assets/img/backgrounds/classroom.jpg', 'assets/img/backgrounds/classroom_2.jpg',
-            'assets/img/backgrounds/cliff.jpg', 'assets/img/backgrounds/cliff_2.jpg',
-            'assets/img/backgrounds/closet.jpg', 'assets/img/backgrounds/closet_2.jpg',
-            'assets/img/backgrounds/clothing_store.jpg', 'assets/img/backgrounds/clothing_store_2.jpg',
-            'assets/img/backgrounds/cockpit.jpg', 'assets/img/backgrounds/cockpit_2.jpg',
-            'assets/img/backgrounds/coffee_shop.jpg', 'assets/img/backgrounds/coffee_shop_2.jpg',
-            'assets/img/backgrounds/conference_room.jpg', 'assets/img/backgrounds/conference_room_2.jpg',
-            'assets/img/backgrounds/construction_site.jpg', 'assets/img/backgrounds/construction_site_2.jpg',
-            'assets/img/backgrounds/convention_center.jpg', 'assets/img/backgrounds/convention_center_2.jpg',
-            'assets/img/backgrounds/coral_reef.jpg', 'assets/img/backgrounds/coral_reef_2.jpg',
-            'assets/img/backgrounds/corn_field.jpg', 'assets/img/backgrounds/corn_field_2.jpg',
-            'assets/img/backgrounds/corral.jpg', 'assets/img/backgrounds/corral_2.jpg',
-            'assets/img/backgrounds/cottage.jpg', 'assets/img/backgrounds/cottage_2.jpg',
-            'assets/img/backgrounds/cottage_garden.jpg', 'assets/img/backgrounds/cottage_garden_2.jpg',
-            'assets/img/backgrounds/courthouse.jpg', 'assets/img/backgrounds/courthouse_2.jpg',
-            'assets/img/backgrounds/courtyard.jpg', 'assets/img/backgrounds/courtyard_2.jpg',
-            'assets/img/backgrounds/creek.jpg', 'assets/img/backgrounds/creek_2.jpg',
-            'assets/img/backgrounds/crosswalk.jpg', 'assets/img/backgrounds/crosswalk_2.jpg',
-            'assets/img/backgrounds/cubicle.jpg', 'assets/img/backgrounds/cubicle_2.jpg',
-            'assets/img/backgrounds/dam.jpg', 'assets/img/backgrounds/dam_2.jpg',
-            'assets/img/backgrounds/deli.jpg', 'assets/img/backgrounds/deli_2.jpg',
-            'assets/img/backgrounds/desert.jpg', 'assets/img/backgrounds/desert_2.jpg',
-            'assets/img/backgrounds/desert_road.jpg', 'assets/img/backgrounds/desert_road_2.jpg',
-            'assets/img/backgrounds/desert_vegetation.jpg', 'assets/img/backgrounds/desert_vegetation_2.jpg',
-            'assets/img/backgrounds/diner.jpg', 'assets/img/backgrounds/diner_2.jpg',
-            'assets/img/backgrounds/dining_room.jpg', 'assets/img/backgrounds/dining_room_2.jpg',
-            'assets/img/backgrounds/dock.jpg', 'assets/img/backgrounds/dock_2.jpg',
-            'assets/img/backgrounds/doorway.jpg', 'assets/img/backgrounds/doorway_2.jpg',
-            'assets/img/backgrounds/elevator_lobby.jpg', 'assets/img/backgrounds/elevator_lobby_2.jpg',
-            'assets/img/backgrounds/escilator.jpg', 'assets/img/backgrounds/escilator_2.jpg',
-            'assets/img/backgrounds/fastfood_restaurant.jpg', 'assets/img/backgrounds/fastfood_restaurant_2.jpg',
-            'assets/img/backgrounds/galley.jpg', 'assets/img/backgrounds/galley_2.jpg',
-            'assets/img/backgrounds/general_store_indoors.jpg', 'assets/img/backgrounds/general_store_indoors_2.jpg',
-            'assets/img/backgrounds/greenhouse.jpg', 'assets/img/backgrounds/greenhouse_2.jpg',
-            'assets/img/backgrounds/gymnsium.jpg', 'assets/img/backgrounds/gymnsium_2.jpg',
-            'assets/img/backgrounds/hanger_indoors.jpg', 'assets/img/backgrounds/hanger_indoors_2.jpg',
-            'assets/img/backgrounds/hardware_store.jpg', 'assets/img/backgrounds/hardware_store_2.jpg',
-            'assets/img/backgrounds/home_theatre.jpg', 'assets/img/backgrounds/home_theatre_2.jpg',
-            'assets/img/backgrounds/hospital_room.jpg', 'assets/img/backgrounds/hospital_room_2.jpg'
-        ]
-
     // backgrounds in sets (for trials)
     var backgrounds = [
         [
-            ['abbey.jpg','airfield.jpg','alcove.jpg','amphitheatre.jpg','amusement_park.jpg','apartment_building.jpg','aqueduct.jpg','arch.jpg','athletic_field.jpg','badlands.jpg','bamboo_forest.jpg','barn.jpg','baseball_field.jpg','basilica.jpg','bayou.jpg','bazaar_outdoors.jpg','beach_house.jpg','beach.jpg','beer_garden.jpg','boardwalk.jpg','boat_deck.jpg','botanical_gardens.jpg','bridge.jpg','bull_ring.jpg','archive.jpg','arena_hockey.jpg','art_studio.jpg','artist_loft.jpg','attic.jpg','auditorium.jpg','auto_factory.jpg','auto_showroom.jpg','bakery.jpg','balcony_interior.jpg','ball_pit.jpg','ballroom.jpg','banquet_hall.jpg','bar.jpg','basketball_court.jpg','bathroom_public.jpg','bay_window.jpg','beauty_salon.jpg','bedroom.jpg','berth.jpg','bistro_indoor.jpg','bistro_outdoor.jpg','boathouse.jpg','bookstore.jpg'],
-            ['abbey_2.jpg','airfield_2.jpg','alcove_2.jpg','amphitheatre_2.jpg','amusement_park_2.jpg','apartment_building_2.jpg','aqueduct_2.jpg','arch_2.jpg','athletic_field_2.jpg','badlands_2.jpg','bamboo_forest_2.jpg','barn_2.jpg','baseball_field_2.jpg','basilica_2.jpg','bayou_2.jpg','bazaar_outdoors_2.jpg','beach_house_2.jpg','beach_2.jpg','beer_garden_2.jpg','boardwalk_2.jpg','boat_deck_2.jpg','botanical_gardens_2.jpg','bridge_2.jpg','bull_ring_2.jpg','archive_2.jpg','arena_hockey_2.jpg','art_studio_2.jpg','artist_loft_2.jpg','attic_2.jpg','auditorium_2.jpg','auto_factory_2.jpg','auto_showroom_2.jpg','bakery_2.jpg','balcony_interior_2.jpg','ball_pit_2.jpg','ballroom_2.jpg','banquet_hall_2.jpg','bar_2.jpg','basketball_court_2.jpg','bathroom_public_2.jpg','bay_window_2.jpg','beauty_salon_2.jpg','bedroom_2.jpg','berth_2.jpg','bistro_indoor_2.jpg','bistro_outdoor_2.jpg','boathouse_2.jpg','bookstore_2.jpg']
+            ['assets/img/backgrounds/abbey.jpg','assets/img/backgrounds/airfield.jpg','assets/img/backgrounds/alcove.jpg','assets/img/backgrounds/amphitheatre.jpg','assets/img/backgrounds/amusement_park.jpg','assets/img/backgrounds/apartment_building.jpg','assets/img/backgrounds/aqueduct.jpg','assets/img/backgrounds/arch.jpg','assets/img/backgrounds/athletic_field.jpg','assets/img/backgrounds/badlands.jpg','assets/img/backgrounds/bamboo_forest.jpg','assets/img/backgrounds/barn.jpg','assets/img/backgrounds/baseball_field.jpg','assets/img/backgrounds/basilica.jpg','assets/img/backgrounds/bayou.jpg','assets/img/backgrounds/bazaar_outdoors.jpg','assets/img/backgrounds/beach_house.jpg','assets/img/backgrounds/beach.jpg','assets/img/backgrounds/beer_garden.jpg','assets/img/backgrounds/boardwalk.jpg','assets/img/backgrounds/boat_deck.jpg','assets/img/backgrounds/botanical_gardens.jpg','assets/img/backgrounds/bridge.jpg','assets/img/backgrounds/bull_ring.jpg', 'assets/img/backgrounds/archive.jpg','assets/img/backgrounds/arena_hockey.jpg','assets/img/backgrounds/art_studio.jpg','assets/img/backgrounds/artist_loft.jpg','assets/img/backgrounds/attic.jpg','assets/img/backgrounds/auditorium.jpg','assets/img/backgrounds/auto_factory.jpg','assets/img/backgrounds/auto_showroom.jpg','assets/img/backgrounds/bakery.jpg','assets/img/backgrounds/balcony_interior.jpg','assets/img/backgrounds/ball_pit.jpg','assets/img/backgrounds/ballroom.jpg','assets/img/backgrounds/banquet_hall.jpg','assets/img/backgrounds/bar.jpg','assets/img/backgrounds/basketball_court.jpg','assets/img/backgrounds/bathroom_public.jpg','assets/img/backgrounds/bay_window.jpg','assets/img/backgrounds/beauty_salon.jpg','assets/img/backgrounds/bedroom.jpg','assets/img/backgrounds/berth.jpg','assets/img/backgrounds/bistro_indoor.jpg','assets/img/backgrounds/bistro_outdoor.jpg','assets/img/backgrounds/boathouse.jpg','assets/img/backgrounds/bookstore.jpg'],
+            ['assets/img/backgrounds/abbey_2.jpg','assets/img/backgrounds/airfield_2.jpg','assets/img/backgrounds/alcove_2.jpg','assets/img/backgrounds/amphitheatre_2.jpg','assets/img/backgrounds/amusement_park_2.jpg','assets/img/backgrounds/apartment_building_2.jpg','assets/img/backgrounds/aqueduct_2.jpg','assets/img/backgrounds/arch_2.jpg','assets/img/backgrounds/athletic_field_2.jpg','assets/img/backgrounds/badlands_2.jpg','assets/img/backgrounds/bamboo_forest_2.jpg','assets/img/backgrounds/barn_2.jpg','assets/img/backgrounds/baseball_field_2.jpg','assets/img/backgrounds/basilica_2.jpg','assets/img/backgrounds/bayou_2.jpg','assets/img/backgrounds/bazaar_outdoors_2.jpg','assets/img/backgrounds/beach_house_2.jpg','assets/img/backgrounds/beach_2.jpg','assets/img/backgrounds/beer_garden_2.jpg','assets/img/backgrounds/boardwalk_2.jpg','assets/img/backgrounds/boat_deck_2.jpg','assets/img/backgrounds/botanical_gardens_2.jpg','assets/img/backgrounds/bridge_2.jpg','assets/img/backgrounds/bull_ring_2.jpg','assets/img/backgrounds/archive_2.jpg','assets/img/backgrounds/arena_hockey_2.jpg','assets/img/backgrounds/art_studio_2.jpg','assets/img/backgrounds/artist_loft_2.jpg','assets/img/backgrounds/attic_2.jpg','assets/img/backgrounds/auditorium_2.jpg','assets/img/backgrounds/auto_factory_2.jpg','assets/img/backgrounds/auto_showroom_2.jpg','assets/img/backgrounds/bakery_2.jpg','assets/img/backgrounds/balcony_interior_2.jpg','assets/img/backgrounds/ball_pit_2.jpg','assets/img/backgrounds/ballroom_2.jpg','assets/img/backgrounds/banquet_hall_2.jpg','assets/img/backgrounds/bar_2.jpg','assets/img/backgrounds/basketball_court_2.jpg','assets/img/backgrounds/bathroom_public_2.jpg','assets/img/backgrounds/bay_window_2.jpg','assets/img/backgrounds/beauty_salon_2.jpg','assets/img/backgrounds/bedroom_2.jpg','assets/img/backgrounds/berth_2.jpg','assets/img/backgrounds/bistro_indoor_2.jpg','assets/img/backgrounds/bistro_outdoor_2.jpg','assets/img/backgrounds/boathouse_2.jpg','assets/img/backgrounds/bookstore_2.jpg']
         ],
         [
-            ['bus_station.jpg','butte.jpg','cabin.jpg','campus.jpg','canal_natural.jpg','canyon.jpg','carrousel.jpg','castle.jpg','chalet.jpg','cliff.jpg','construction_site.jpg','coral_reef.jpg','corn_field.jpg','corral.jpg','cottage_garden.jpg','cottage.jpg','courthouse.jpg','courtyard.jpg','creek.jpg','crosswalk.jpg','dam.jpg','desert_road.jpg','desert_vegetation.jpg','diner.jpg','boxing_ring.jpg','bus_interior.jpg','cafeteria.jpg','candy_store.jpg','car_back_seat.jpg','catacombs.jpg','cathedral_indoor.jpg','childs_room.jpg','classroom.jpg','closet.jpg','clothing_store.jpg','cockpit.jpg','coffee_shop.jpg','conference_room.jpg','cubicle.jpg','deli.jpg','dining_room.jpg','elevator_lobby.jpg','escilator.jpg','fastfood_restaurant.jpg','galley.jpg','general_store_indoors.jpg','greenhouse.jpg','gymnsium.jpg'],
-            ['bus_station_2.jpg','butte_2.jpg','cabin_2.jpg','campus_2.jpg','canal_natural_2.jpg','canyon_2.jpg','carrousel_2.jpg','castle_2.jpg','chalet_2.jpg','cliff_2.jpg','construction_site_2.jpg','coral_reef_2.jpg','corn_field_2.jpg','corral_2.jpg','cottage_garden_2.jpg','cottage_2.jpg','courthouse_2.jpg','courtyard_2.jpg','creek_2.jpg','crosswalk_2.jpg','dam_2.jpg','desert_road_2.jpg','desert_vegetation_2.jpg','diner_2.jpg','boxing_ring_2.jpg','bus_interior_2.jpg','cafeteria_2.jpg','candy_store_2.jpg','car_back_seat_2.jpg','catacombs_2.jpg','cathedral_indoor_2.jpg','childs_room_2.jpg','classroom_2.jpg','closet_2.jpg','clothing_store_2.jpg','cockpit_2.jpg','coffee_shop_2.jpg','conference_room_2.jpg','cubicle_2.jpg','deli_2.jpg','dining_room_2.jpg','elevator_lobby_2.jpg','escilator_2.jpg','fastfood_restaurant_2.jpg','galley_2.jpg','general_store_indoors_2.jpg','greenhouse_2.jpg','gymnsium_2.jpg']
+            ['assets/img/backgrounds/bus_station.jpg','assets/img/backgrounds/butte.jpg','assets/img/backgrounds/cabin.jpg','assets/img/backgrounds/campus.jpg','assets/img/backgrounds/canal_natural.jpg','assets/img/backgrounds/canyon.jpg','assets/img/backgrounds/carrousel.jpg','assets/img/backgrounds/castle.jpg','assets/img/backgrounds/chalet.jpg','assets/img/backgrounds/cliff.jpg','assets/img/backgrounds/construction_site.jpg','assets/img/backgrounds/convention_center.jpg','assets/img/backgrounds/coral_reef.jpg','assets/img/backgrounds/corn_field.jpg','assets/img/backgrounds/corral.jpg','assets/img/backgrounds/cottage_garden.jpg','assets/img/backgrounds/cottage.jpg','assets/img/backgrounds/courthouse.jpg','assets/img/backgrounds/courtyard.jpg','assets/img/backgrounds/creek.jpg','assets/img/backgrounds/crosswalk.jpg','assets/img/backgrounds/dam.jpg','assets/img/backgrounds/desert_road.jpg','assets/img/backgrounds/desert_vegetation.jpg','assets/img/backgrounds/boxing_ring.jpg','assets/img/backgrounds/bus_interior.jpg','assets/img/backgrounds/cafeteria.jpg','assets/img/backgrounds/candy_store.jpg','assets/img/backgrounds/car_back_seat.jpg','assets/img/backgrounds/catacombs.jpg','assets/img/backgrounds/cathedral_indoor.jpg','assets/img/backgrounds/childs_room.jpg','assets/img/backgrounds/classroom.jpg','assets/img/backgrounds/closet.jpg','assets/img/backgrounds/clothing_store.jpg','assets/img/backgrounds/cockpit.jpg','assets/img/backgrounds/coffee_shop.jpg','assets/img/backgrounds/conference_room.jpg','assets/img/backgrounds/cubicle.jpg','assets/img/backgrounds/deli.jpg','assets/img/backgrounds/dining_room.jpg','assets/img/backgrounds/elevator_lobby.jpg','assets/img/backgrounds/escilator.jpg','assets/img/backgrounds/fastfood_restaurant.jpg','assets/img/backgrounds/galley.jpg','assets/img/backgrounds/general_store_indoors.jpg','assets/img/backgrounds/greenhouse.jpg','assets/img/backgrounds/gymnsium.jpg'],
+            ['assets/img/backgrounds/bus_station_2.jpg','assets/img/backgrounds/butte_2.jpg','assets/img/backgrounds/cabin_2.jpg','assets/img/backgrounds/campus_2.jpg','assets/img/backgrounds/canal_natural_2.jpg','assets/img/backgrounds/canyon_2.jpg','assets/img/backgrounds/carrousel_2.jpg','assets/img/backgrounds/castle_2.jpg','assets/img/backgrounds/chalet_2.jpg','assets/img/backgrounds/cliff_2.jpg','assets/img/backgrounds/construction_site_2.jpg','assets/img/backgrounds/convention_center_2.jpg','assets/img/backgrounds/coral_reef_2.jpg','assets/img/backgrounds/corn_field_2.jpg','assets/img/backgrounds/corral_2.jpg','assets/img/backgrounds/cottage_garden_2.jpg','assets/img/backgrounds/cottage_2.jpg','assets/img/backgrounds/courthouse_2.jpg','assets/img/backgrounds/courtyard_2.jpg','assets/img/backgrounds/creek_2.jpg','assets/img/backgrounds/crosswalk_2.jpg','assets/img/backgrounds/dam_2.jpg','assets/img/backgrounds/desert_road_2.jpg','assets/img/backgrounds/desert_vegetation_2.jpg','assets/img/backgrounds/boxing_ring_2.jpg','assets/img/backgrounds/bus_interior_2.jpg','assets/img/backgrounds/cafeteria_2.jpg','assets/img/backgrounds/candy_store_2.jpg','assets/img/backgrounds/car_back_seat_2.jpg','assets/img/backgrounds/catacombs_2.jpg','assets/img/backgrounds/cathedral_indoor_2.jpg','assets/img/backgrounds/childs_room_2.jpg','assets/img/backgrounds/classroom_2.jpg','assets/img/backgrounds/closet_2.jpg','assets/img/backgrounds/clothing_store_2.jpg','assets/img/backgrounds/cockpit_2.jpg','assets/img/backgrounds/coffee_shop_2.jpg','assets/img/backgrounds/conference_room_2.jpg','assets/img/backgrounds/cubicle_2.jpg','assets/img/backgrounds/deli_2.jpg','assets/img/backgrounds/dining_room_2.jpg','assets/img/backgrounds/elevator_lobby_2.jpg','assets/img/backgrounds/escilator_2.jpg','assets/img/backgrounds/fastfood_restaurant_2.jpg','assets/img/backgrounds/galley_2.jpg','assets/img/backgrounds/general_store_indoors_2.jpg','assets/img/backgrounds/greenhouse_2.jpg','assets/img/backgrounds/gymnsium_2.jpg']
         ]
     ]
     var back_copy = [[backgrounds[0][0].slice(), backgrounds[0][1].slice()], [backgrounds[1][0].slice(), backgrounds[1][1].slice()]];
 
     // choose flower set (48 flower images)  
     var flower_sets = ['set0','set60', 'set120', 'set180', 'set240', 'set300'];
-    var set_folder = flower_sets[0];
+    var set_folder = jsPsych.randomization.sampleWithoutReplacement(flower_sets,1)[0];
     //var set_folder = jsPsych.randomization.sampleWithoutReplacement(['set0','set60', 'set120', 'set180', 'set240', 'set300'], 1)[0];
     //alert(set_folder)
 
@@ -278,7 +170,6 @@
     var group_condition = jsPsych.randomization.sampleWithoutReplacement([0, 1], 1)[0]; // 0: 'A'='sun', 1:'B'='sun'
     
     // choose background image set (48 originals, 48 lures) - 2 options
-    var backgrounds_folder = 'backgrounds'
     var background_set = jsPsych.randomization.sampleWithoutReplacement([0, 1], 1)[0]; 
     var lure = jsPsych.randomization.sampleWithoutReplacement([0, 1], 1)[0]; //which list within the set is the lures 
     
@@ -316,6 +207,13 @@
                 var g = 'shade';
             }
             var randomIndex = Math.floor(Math.random()*(num_trials-x-i)); // randomly select background image
+            // create if first of colour set or first of shape
+            var create = 1;
+            for (idx=0; idx<x; idx++){
+                if (categories[i+idx]==categories[i+x]) {
+                    create = 0;
+                }
+            }
             stimuli.push(
                 {
                     stimulus: 'assets/img/flowers/'+set_folder+'/flower'+(i+x+1).toString() +'.png',
@@ -323,21 +221,9 @@
                     colour: flower_info[i+x]["shade"],
                     category: categories[i+x],
                     group: g,
-                    create: function() { 
-
-                        // create if first of colour set or first of shape
-                        if (x==0) {
-                            return 1;
-                        }
-                        for (idx=0; idx<x; idx++){
-                            if (categories[i+idx]==categories[i+x]) {
-                                return 0;
-                            }
-                        }
-                        return 1;
-                    },
-                    background: 'assets/img/'+backgrounds_folder+'/'+back_copy[background_set][1-lure].splice(randomIndex, 1)[0],
-                    lure: 'assets/img/'+backgrounds_folder+'/'+back_copy[background_set][lure].splice(randomIndex, 1)[0]
+                    create: create,
+                    background: back_copy[background_set][1-lure].splice(randomIndex, 1)[0],
+                    lure: back_copy[background_set][lure].splice(randomIndex, 1)[0]
                 }
             )
             flowers.push('assets/img/flowers/'+set_folder+'/flower'+(i+x+1).toString() +'.png');
@@ -366,7 +252,7 @@
        // 24 new
        if (i<(num_trials/2)) {
             rec_backs.push({
-                background: 'assets/img/'+backgrounds_folder+'/'+novel_backs[i],
+                background: novel_backs[i],
                 lure: -1,
                 create: 0
             });
@@ -465,6 +351,7 @@
             stimulus_type: jsPsych.timelineVariable('group'),
             category: jsPsych.timelineVariable('category'),
             create: jsPsych.timelineVariable('create'),
+            background: jsPsych.timelineVariable('background'),
             lure: jsPsych.timelineVariable('lure')
         },
         on_finish: function(data){
@@ -607,8 +494,8 @@
         on_finish: function(data){
             // "old" and actually old (0), "new" and lure (1) or new (-1)
             if( ( (data.key_press == 37) && (data.lure== 0) )
-                || ( (data.button_pressed == 39) && (data.lure == 1) ) 
-                || ( (data.button_pressed == 39) && (data.lure == -1) )){
+                || ( (data.key_press == 39) && (data.lure == 1) ) 
+                || ( (data.key_press == 39) && (data.lure == -1) )){
                 data.correct = true;
             } else {
                 data.correct = false;
@@ -663,7 +550,6 @@
         type: 'external-html-flower-recon',
         url: 'flower_generator_index.html',
         background: jsPsych.timelineVariable('background'), // only actually seen backgrounds
-        //background: 'assets/img/instructions/japanese_garden.jpg',
         execute_script: true,
         cont_btn: "next",
         check_fn: function(elem) {
@@ -719,9 +605,9 @@
 
     /******************************************************************************************/
  
-/*     timeline.push(consent_inst);
+    timeline.push(consent_inst);
     timeline.push(consent_page);
-    timeline.push(start_trial); 
+    timeline.push(start_trial);
 
     timeline.push(categorization_trials);
     timeline.push(draw_end_learning);
@@ -734,7 +620,7 @@
     timeline.push(timer_loop);
     timeline.push(next_trial);
 
-    timeline.push(recon_instruction_trial);*/
+    timeline.push(recon_instruction_trial);
     timeline.push(reconstruction_trials);
     timeline.push(draw_end_recon_test);
 
@@ -744,7 +630,7 @@
     // run experiment
     jsPsych.init({
         timeline: timeline,
-        preload_images: [all_backgrounds, category_img, feedback_img, ins_img, flowers],
+        preload_images: [backgrounds[background_set].flat(), novel_backs, category_img, feedback_img, ins_img, flowers],
         show_progress_bar: true,
         auto_update_progress_bar: false,
         message_progress_bar: '',

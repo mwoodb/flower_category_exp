@@ -31,7 +31,7 @@ function drawFlower1(petalColor,petalShape,circleShape) {
     new Path.Rectangle({
         center: [xoff,yoff],
         size: [width, height],
-        fillColor: new Color(0.8,0.8,0.8,1),
+        fillColor: new Color(1,1,1,1),
     });
 
     pcolor = petalColor;
@@ -407,6 +407,19 @@ function export_csv(arrayHeader, arrayData, delimiter, fileName){
     hiddenElement.click();
 }
 
+// create colour wheel flowers
+function flower_wheel(){
+/*     for (var i= 0; i<360; i+=30){
+        download_img(i, 10, 9, 'flower_wheel'+i+'.png');
+        alert(i);
+    } */
+    var shapes = [1, 2, 5, 8, 10, 12, 15, 18, 19];
+    for (var i = 0; i<shapes.length; i++){
+        download_img(210, shapes[i], 9, 'flower_shape'+shapes[i]+'.png');
+        alert(i);
+    }
+}
+
 // shape from 360 scale to actual flower shape scale
 function deg2shape(petalShape){
     var petal_shape_max = 19;
@@ -420,6 +433,7 @@ globals.download_img = download_img;
 globals.flower_set = flower_set;
 globals.export_csv = export_csv;
 globals.deg2shape = deg2shape;
+globals.flower_wheel = flower_wheel;
 
 
 
