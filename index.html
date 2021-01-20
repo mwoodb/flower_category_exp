@@ -47,7 +47,7 @@
     var instruction_time = 5000;
     var waiting_time = 3;
     var count_down = waiting_time;
-    var num_trials = 48; // number of learning trials (multiple of 4) - usually 48
+    var num_trials = 4; // number of learning trials (multiple of 4) - usually 48
     
     // feedback and instruction images
     var ins_img = ['assets/img/instructions/example_learning_trial.png', 'assets/img/instructions/example_recon_trial.png','assets/img/instructions/japanese_garden.jpg', 'assets/img/instructions/recon_dials.png'];
@@ -337,7 +337,7 @@
         stimulus: jsPsych.timelineVariable('stimulus'),
         background: jsPsych.timelineVariable('background'),
         choices: [37, 39],
-        prompt: '<p>'+stim_question+'</p>',
+        prompt: '<p class="prompt">'+stim_question+'</p>',
         response_ends_trial: false,
         trial_duration: stim_time+bkg_time,
         stimulus_duration: stim_time,
@@ -477,7 +477,7 @@
         background: jsPsych.timelineVariable('background'),
         stimulus:'',
         choices: [37, 39],
-        prompt: '<p>'+rec_question+'</p>',
+        prompt: '<p class="prompt">'+rec_question+'</p>',
         response_ends_trial: false,
         trial_duration: rec_time,
         options: ['Old', 'New'],

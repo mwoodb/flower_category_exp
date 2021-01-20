@@ -48,6 +48,11 @@
   line-height: 1.6em;
 }
 
+/* prompt fonts */
+.prompt {
+  font-size: 20px;
+}
+
 /* Form elements like input fields and buttons */
 
 .jspsych-display-element input[type="text"] {
