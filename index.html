@@ -629,7 +629,12 @@
         on_finish: function(){
             //jsPsych.data.displayData('json');
             var end_time = new Date();
-            var duraction = ((end_time - start_time)/60000).toFixed(2);
+            var duration = ((end_time - start_time)/60000).toFixed(2);
+
+            // organize data into sections
+            var learning_responses = jsPsych.data.get().filter([{trial_type: 'image-bkg-keyboard-response', exp_section: 'category_learning'}]);
+            var scene_responses = jsPsych.data.get().filter([{trial_type: 'image-bkg-keyboard-response', exp_section: 'scene_recognition'}])
+            var learning_responses = jsPsych.data.get().filter([{trial_type: 'external-html-flower-recon', exp_section: 'flower_reconstruction'}])
 
             var data = {
                 prolific_id: prolific_ids.PROLIFIC_ID,
@@ -638,11 +643,17 @@
                 experiment: "category_learning_task",
                 repo: "mwoodb.github.io",
                 subject: subject_id,
+                duration: duration,
+                date: Date(),
                 flower_set: set_folder,
                 flower_shape_condition: group_condition,
                 background_img_set: background_set,
                 lure_img_set: lure,
-                data: jsPsych.data.get().values()
+                data: [
+                    learning_responses,
+                    scene_responses,
+                    learning_responses
+                ]
             }
             
             // send data to savejs
