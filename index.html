@@ -36,13 +36,16 @@
 
 </head>
 <script>
+    
+    var start_time = new Date();
+
+    // get prolific ID and session ID
+    var prolific_ids = jsPsych.data.urlVariables();
+
     window.globals = {x1: 180, x2: 180, x3: 9};
     var timeline = [];
 
     /**************************************************** set up ****************************************************/
-
-    // generate a random subject ID with 15 characters
-    var subject_id = jsPsych.randomization.randomID(15);
 
     // general experiment settings
     var instruction_time = 5000;
@@ -277,6 +280,31 @@
     }
     rec_backs = rec_backs_shuffled;
 
+    /**************************************************** subject ID ****************************************************/
+    
+    // Subject id = subject number + shape condition + orig-lure background set + lure list + start colour
+    function makeid() {
+        var id = '';
+
+        // subject number (15 digit code)
+        id += jsPsych.randomization.randomID(15);
+
+        // shape condition (0: sun = A or 1: shade = A)
+        id += group_condition.toString();
+
+        // orig-lure background set (0 or 1)
+        id += background_set.toString();
+
+        // lure list (0 or 1)
+        id += lure.toString();
+
+        // starting colour ()
+        id += set_folder.slice(3, set_folder.length);
+
+        return id;
+    }
+    var subject_id = makeid();
+    
     /**************************************************** consent ****************************************************/
     
     // fullscreen
@@ -600,8 +628,13 @@
         data: {disp_type: 'debriefing_page'},
         on_finish: function(){
             //jsPsych.data.displayData('json');
+            var end_time = new Date();
+            var duraction = ((end_time - start_time)/60000).toFixed(2);
 
             var data = {
+                prolific_id: prolific_ids.PROLIFIC_ID,
+                study_id: prolific_ids.STUDY_ID,
+                session_id: prolific_ids.SESSION_ID,
                 experiment: "category_learning_task",
                 repo: "mwoodb.github.io",
                 subject: subject_id,
