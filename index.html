@@ -517,6 +517,7 @@
         trial_duration: rec_time,
         options: ['Old', 'New'],
         lure: jsPsych.timelineVariable('lure'),
+        exp_section: 'scene_recognition',
         data: {
             exp_section: 'scene_recognition',
             background: jsPsych.timelineVariable('background'),
@@ -632,9 +633,9 @@
             var duration = ((end_time - start_time)/60000).toFixed(2);
 
             // organize data into sections
-            var learning_responses = jsPsych.data.get().filter([{trial_type: 'image-bkg-keyboard-response', exp_section: 'category_learning'}]);
-            var scene_responses = jsPsych.data.get().filter([{trial_type: 'image-bkg-keyboard-response', exp_section: 'scene_recognition'}])
-            var learning_responses = jsPsych.data.get().filter([{trial_type: 'external-html-flower-recon', exp_section: 'flower_reconstruction'}])
+            var learning_responses = jsPsych.data.get().filter([{type: 'image-bkg-keyboard-response', exp_section: 'category_learning'}]);
+            var scene_responses = jsPsych.data.get().filter([{type: 'image-bkg-keyboard-response', exp_section: 'scene_recognition'}])
+            var learning_responses = jsPsych.data.get().filter([{type: 'external-html-flower-recon', exp_section: 'flower_reconstruction'}])
 
             var data = {
                 prolific_id: prolific_ids.PROLIFIC_ID,
