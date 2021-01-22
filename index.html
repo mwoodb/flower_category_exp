@@ -517,7 +517,6 @@
         trial_duration: rec_time,
         options: ['Old', 'New'],
         lure: jsPsych.timelineVariable('lure'),
-        exp_section: 'scene_recognition',
         data: {
             exp_section: 'scene_recognition',
             background: jsPsych.timelineVariable('background'),
@@ -633,12 +632,12 @@
             var duration = ((end_time - start_time)/60000).toFixed(2);
 
             // organize data into sections
-            var learning_responses = jsPsych.data.get().filter([{type: 'image-bkg-keyboard-response', exp_section: 'category_learning'}]);
-            var scene_responses = jsPsych.data.get().filter([{type: 'image-bkg-keyboard-response', exp_section: 'scene_recognition'}])
-            var learning_responses = jsPsych.data.get().filter([{type: 'external-html-flower-recon', exp_section: 'flower_reconstruction'}])
+            var learning_responses = jsPsych.data.get().filterCustom([{trial_type: 'image-bkg-keyboard-response', exp_section: 'category_learning'}]);
+            var scene_responses = jsPsych.data.get().filter([{trial_type: 'image-bkg-keyboard-response', exp_section: 'scene_recognition'}])
+            var learning_responses = jsPsych.data.get().filter([{trial_type: 'external-html-flower-recon', exp_section: 'flower_reconstruction'}])
 
             var data = {
-                prolific_id: prolific_ids.PROLIFIC_ID,
+                prolific_id: prolific_ids.PROLIFIC_PID,
                 study_id: prolific_ids.STUDY_ID,
                 session_id: prolific_ids.SESSION_ID,
                 experiment: "category_learning_task",
@@ -679,6 +678,7 @@
     var end_trial = {
         type: 'html-keyboard-response',
         stimulus: '<p style="font-size:300%; line-height:1.0">Thank you for your participation!</p><img src="'+pos_feedback_img+'"></img>',
+        trial_duration: 1000,
         choices: jsPsych.ANY_KEYS
     }
 
@@ -703,7 +703,7 @@
     timeline.push(reconstruction_trials);
     timeline.push(draw_end_recon_test);
 
-    timeline.push(debrief_page); 
+    timeline.push(debrief_page);
     timeline.push(end_trial);
 
     // run experiment
@@ -714,7 +714,10 @@
         show_progress_bar: true,
         auto_update_progress_bar: false,
         message_progress_bar: '',
-        max_load_time: 180000
+        max_load_time: 180000,
+        on_finish: function() {
+          window.location.replace("https://www.google.com/");
+        },
     })
 
 </script>
