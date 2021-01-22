@@ -633,8 +633,11 @@
 
             // organize data into sections
             var learning_responses = jsPsych.data.get().filter([{trial_type: 'image-bkg-keyboard-response', exp_section: 'category_learning'}]);
-            var scene_responses = jsPsych.data.get().filter([{trial_type: 'image-bkg-keyboard-response', exp_section: 'scene_recognition'}])
-            var learning_responses = jsPsych.data.get().filter([{trial_type: 'external-html-flower-recon', exp_section: 'flower_reconstruction'}])
+            var learning_data = {'phase': 'category_learning', 'data': learning_responses.values()};
+            var scene_responses = jsPsych.data.get().filter([{trial_type: 'image-bkg-keyboard-response', exp_section: 'scene_recognition'}]);
+            var scene_data = {'phase': 'scene_recognition', 'data': scene_responses.values()};
+            var recon_responses = jsPsych.data.get().filter([{trial_type: 'external-html-flower-recon', exp_section: 'flower_reconstruction'}]);
+            var recon_data = {'phase': 'flower_reconstruction', 'data': recon_responses.values()};
 
             var data = {
                 prolific_id: prolific_ids.PROLIFIC_PID,
@@ -650,9 +653,9 @@
                 background_img_set: background_set,
                 lure_img_set: lure,
                 data: [
-                    learning_responses,
-                    scene_responses,
-                    learning_responses
+                    learning_data,
+                    scene_data,
+                    recon_data
                 ]
             }
             
